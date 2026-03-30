@@ -116,9 +116,9 @@
 |-----------------|--------------|--------|
 | ![Main](screenshots/main.jpg) | ![Inventory](screenshots/inventory.jpg) | ![Game](screenshots/game.jpg) |
 
-| 📊 Статистика | 🎮 Настройки | 🃏 Особенности карт |
+| 📊 Статистика | 🎁 Промокоды | 🃏 Особенности карт |
 |---------------|--------------|-------------------|
-| ![Stats](screenshots/stats.jpg) | ![Settings](screenshots/settings.jpg) | ![CardEffects](screenshots/card_effects.jpg) |
+| ![Stats](screenshots/stats.jpg) | ![Promo](screenshots/promo.jpg) | ![CardEffects](screenshots/card_effects.jpg) |
 
 ---
 
