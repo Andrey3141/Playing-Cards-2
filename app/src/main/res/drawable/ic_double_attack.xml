@@ -1,0 +1,204 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Два меча крест-накрест с осколками рыцарского щита -->
+
+    <!-- Первый меч (слева направо) -->
+    <group
+        android:rotation="-30"
+        android:pivotX="12"
+        android:pivotY="9">
+        <!-- Клинок -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeColor="#000000"
+            android:strokeWidth="0.5"
+            android:pathData="M12,4 L10,12 L9.5,14 L14.5,14 L14,12 L12,4z"/>
+        <!-- Крестовина -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeColor="#000000"
+            android:strokeWidth="0.5"
+            android:pathData="M9.5,14 L14.5,14 L14.5,15 L9.5,15 L9.5,14z"/>
+        <!-- Рукоять -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeColor="#000000"
+            android:strokeWidth="0.5"
+            android:pathData="M11,15 L13,15 L13,19 L11,19 L11,15z"/>
+        <!-- Навершие -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeColor="#000000"
+            android:strokeWidth="0.5"
+            android:pathData="M10,19 L14,19 L14,20.5 L10,20.5 L10,19z"/>
+    </group>
+
+    <!-- Второй меч (справа налево) -->
+    <group
+        android:rotation="30"
+        android:pivotX="12"
+        android:pivotY="9">
+        <!-- Клинок -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeColor="#000000"
+            android:strokeWidth="0.5"
+            android:pathData="M12,4 L10,12 L9.5,14 L14.5,14 L14,12 L12,4z"/>
+        <!-- Крестовина -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeColor="#000000"
+            android:strokeWidth="0.5"
+            android:pathData="M9.5,14 L14.5,14 L14.5,15 L9.5,15 L9.5,14z"/>
+        <!-- Рукоять -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeColor="#000000"
+            android:strokeWidth="0.5"
+            android:pathData="M11,15 L13,15 L13,19 L11,19 L11,15z"/>
+        <!-- Навершие -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeColor="#000000"
+            android:strokeWidth="0.5"
+            android:pathData="M10,19 L14,19 L14,20.5 L10,20.5 L10,19z"/>
+    </group>
+
+    <!-- Осколки рыцарского щита (белые с золотыми и серыми фрагментами) -->
+
+    <!-- Осколки верхней части щита (белые фрагменты) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.2"
+        android:pathData="M13,3 L14,3.8 L13,4.5 L12,3.8 L13,3z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.2"
+        android:pathData="M10,2.5 L11,3.2 L10.5,4 L9.5,3.3 L10,2.5z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.2"
+        android:pathData="M15,4 L15.8,4.6 L15.2,5.5 L14.3,4.9 L15,4z"/>
+
+    <!-- Осколки левой части щита с золотыми заклепками -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.2"
+        android:pathData="M2,9 L3,9.5 L2.5,10.5 L1.5,10 L2,9z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.2"
+        android:pathData="M3,6 L3.8,6.8 L3.2,7.5 L2.4,6.7 L3,6z"/>
+    <path
+        android:fillColor="#FFC107"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.2"
+        android:pathData="M4,11 L4.6,11.5 L4.2,12.2 L3.5,11.7 L4,11z"/>
+
+    <!-- Осколки правой части щита -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.2"
+        android:pathData="M22,8 L22.7,8.6 L22.1,9.3 L21.4,8.7 L22,8z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.2"
+        android:pathData="M21,6 L21.7,6.6 L21.1,7.3 L20.4,6.7 L21,6z"/>
+    <path
+        android:fillColor="#FFC107"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.2"
+        android:pathData="M20,10 L20.6,10.5 L20.2,11.2 L19.5,10.7 L20,10z"/>
+
+    <!-- Осколки нижней части щита -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.2"
+        android:pathData="M11,21 L11.7,21.5 L11.3,22.2 L10.6,21.7 L11,21z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.2"
+        android:pathData="M13,21 L13.7,21.5 L13.3,22.2 L12.6,21.7 L13,21z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.2"
+        android:pathData="M9,19 L9.6,19.5 L9.2,20.2 L8.5,19.7 L9,19z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.2"
+        android:pathData="M15,19 L15.6,19.5 L15.2,20.2 L14.5,19.7 L15,19z"/>
+    <path
+        android:fillColor="#FFC107"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.2"
+        android:pathData="M12,23 L12.6,23.4 L12.2,24 L11.5,23.6 L12,23z"/>
+
+    <!-- Осколки центральной части с геральдическим крестом -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.2"
+        android:pathData="M8,12 L8.6,12.5 L8.2,13.2 L7.5,12.7 L8,12z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.2"
+        android:pathData="M16,12 L16.6,12.5 L16.2,13.2 L15.5,12.7 L16,12z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.2"
+        android:pathData="M12,9 L12.6,9.5 L12.2,10.2 L11.5,9.7 L12,9z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.2"
+        android:pathData="M12,15 L12.6,15.5 L12.2,16.2 L11.5,15.7 L12,15z"/>
+    <path
+        android:fillColor="#FFC107"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.2"
+        android:pathData="M10,14 L10.5,14.4 L10.1,15 L9.4,14.6 L10,14z"/>
+    <path
+        android:fillColor="#FFC107"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.2"
+        android:pathData="M14,14 L14.5,14.4 L14.1,15 L13.4,14.6 L14,14z"/>
+
+    <!-- Осколки с декоративной чеканкой -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.2"
+        android:pathData="M5,14 L5.5,14.4 L5.1,15 L4.4,14.6 L5,14z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.2"
+        android:pathData="M19,14 L19.5,14.4 L19.1,15 L18.4,14.6 L19,14z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.2"
+        android:pathData="M6,17 L6.5,17.4 L6.1,18 L5.4,17.6 L6,17z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.2"
+        android:pathData="M18,17 L18.5,17.4 L18.1,18 L17.4,17.6 L18,17z"/>
+</vector>

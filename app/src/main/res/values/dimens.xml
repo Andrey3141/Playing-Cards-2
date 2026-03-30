@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Размеры для кнопок -->
+    <dimen name="button_width">280dp</dimen>
+    <dimen name="button_height">70dp</dimen>
+    <dimen name="button_corner_radius">35dp</dimen>
+
+    <!-- Размеры для ландшафтной ориентации -->
+    <dimen name="button_width_land">400dp</dimen>
+    <dimen name="button_height_land">60dp</dimen>
+
+    <!-- Размеры для карточек -->
+    <dimen name="card_width">150dp</dimen>
+    <dimen name="card_height">200dp</dimen>
+    <dimen name="card_corner_radius">16dp</dimen>
+
+    <!-- Размеры для портретной ориентации -->
+    <dimen name="card_width_port">140dp</dimen>
+    <dimen name="card_height_port">200dp</dimen>
+    <dimen name="title_size_port">32sp</dimen>
+
+    <!-- Размеры для ландшафтной ориентации карточек -->
+    <dimen name="card_width_land">160dp</dimen>
+    <dimen name="card_height_land">220dp</dimen>
+    <dimen name="title_size_land">28sp</dimen>
+
+    <!-- Размеры текста -->
+    <dimen name="title_text_size">48sp</dimen>
+    <dimen name="title_text_size_land">36sp</dimen>
+    <dimen name="button_text_size">22sp</dimen>
+    <dimen name="button_text_size_land">20sp</dimen>
+    <dimen name="subtitle_text_size">16sp</dimen>
+
+    <!-- Иконки -->
+    <dimen name="icon_size">32dp</dimen>
+    <dimen name="icon_size_land">28dp</dimen>
+
+    <!-- Отступы -->
+    <dimen name="margin_extra_large">56dp</dimen>
+    <dimen name="margin_large">40dp</dimen>
+    <dimen name="margin_medium">24dp</dimen>
+    <dimen name="margin_small">16dp</dimen>
+    <dimen name="margin_tiny">8dp</dimen>
+
+    <!-- Размер кнопки выхода -->
+    <dimen name="button_size">56dp</dimen>
+
+    <!-- Размеры для замка -->
+    <dimen name="lock_size">40dp</dimen>
+</resources>

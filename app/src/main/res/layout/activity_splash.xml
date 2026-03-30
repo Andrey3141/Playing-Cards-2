@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:animateLayoutChanges="true">
+
+    <!-- Центральный контейнер для текста -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingHorizontal="32dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Заголовок ДИСКЛЕЙМЕР -->
+        <TextView
+            android:id="@+id/disclaimerTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ДИСКЛЕЙМЕР"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:fontFamily="@font/playfair_display_bold"
+            android:gravity="center"
+            android:letterSpacing="0.15"
+            android:layout_marginBottom="32dp" />
+
+        <!-- Декоративная линия -->
+        <View
+            android:id="@+id/disclaimerLine"
+            android:layout_width="80dp"
+            android:layout_height="2dp"
+            android:background="#FFFFFF"
+            android:alpha="0.4"
+            android:layout_marginBottom="32dp" />
+
+        <!-- Основной текст дисклеймера -->
+        <TextView
+            android:id="@+id/disclaimerText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ИГРА НЕСЕТ ИСКЛЮЧИТЕЛЬНО ЮМОРИСТИЧЕСКИЙ ХАРАКТЕР. АВТОР НЕ ПРЕСЛЕДУЕТ ЦЕЛИ КОГО-ТО ОСКОРБИТЬ, ОБИДЕТЬ ИЛИ УНИЗИТЬ. В ПОДТВЕРЖДЕНИЕ ЭТОГО АВТОР ДОБАВИЛ СЕБЯ И ВСЕХ ТЕХ КТО ПРИНИМАЛ УЧАСТИЕ В ЭТОЙ ИГРЫ В САМУ ИГРУ. ЕСЛИ ЖЕ ИГРА ВСЕ ЖЕ ВАС ЗАДЕЛА, ПРОСИМ ПОНЯТЬ, ПРОСТИТЬ И ОТПУСТИТЬ"
+            android:textSize="15sp"
+            android:textColor="#FFFFFF"
+            android:fontFamily="@font/montserrat_regular"
+            android:gravity="center"
+            android:lineSpacingExtra="8dp" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

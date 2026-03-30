@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/dialogCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="20dp"
+    app:cardCornerRadius="28dp"
+    app:cardElevation="20dp"
+    app:cardBackgroundColor="#CC1A1A2E"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:gravity="center">
+
+        <!-- Заголовок -->
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ВЫБЕРИТЕ РЕЖИМ"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:fontFamily="@font/playfair_display_bold"
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="6dp"
+            android:shadowColor="#FFD700"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="6" />
+
+        <!-- Подзаголовок -->
+        <TextView
+            android:id="@+id/subtitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Выберите способ сражения"
+            android:textSize="12sp"
+            android:textColor="#CCFFFFFF"
+            android:fontFamily="@font/montserrat_regular"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Кнопка Оффлайн -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/offlineButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:cardCornerRadius="28dp"
+            app:cardElevation="6dp"
+            app:cardBackgroundColor="#FF6B4A"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:stateListAnimator="@null">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="14dp">
+
+                <FrameLayout
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="10dp">
+
+                    <ImageView
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:src="@drawable/ic_offline"
+                        android:tint="#FFFFFF"
+                        android:layout_gravity="center" />
+
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="ОФФЛАЙН"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#FFFFFF"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:maxLines="1" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Сражение с ИИ"
+                        android:textSize="11sp"
+                        android:textColor="#CCFFFFFF"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:maxLines="1" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/offlineArrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="→"
+                    android:textSize="20sp"
+                    android:textColor="#FFFFFF"
+                    android:alpha="0.8" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Кнопка Онлайн -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/onlineButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:cardCornerRadius="28dp"
+            app:cardElevation="6dp"
+            app:cardBackgroundColor="#33FFFFFF"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:stateListAnimator="@null">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="14dp">
+
+                <FrameLayout
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="10dp">
+
+                    <ImageView
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:src="@drawable/ic_online"
+                        android:tint="#FFFFFF"
+                        android:layout_gravity="center" />
+
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="ОНЛАЙН"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#FFFFFF"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:maxLines="1" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Скоро будет доступно"
+                        android:textSize="11sp"
+                        android:textColor="#CCFFFFFF"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:maxLines="1" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/onlineLock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🔒"
+                    android:textSize="18sp"
+                    android:alpha="0.6" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Декоративная линия -->
+        <View
+            android:layout_width="50dp"
+            android:layout_height="1dp"
+            android:background="#80FFFFFF"
+            android:layout_marginVertical="12dp" />
+
+        <!-- Кнопка отмены -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="#20FFFFFF"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ОТМЕНА"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/montserrat_bold"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="8dp" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

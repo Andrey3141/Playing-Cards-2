@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Игра в карточки 2</string>
+
+    <!-- Особенности карт -->
+    <string name="special_extra_attack">С вероятностью 20% атакует повторно</string>
+    <string name="special_triggered">🔥 %s атакует снова! 🔥</string>
+    <string name="special_extra_attack_hint">Повторная атака</string>
+
+    <!-- Интерфейс -->
+    <string name="select_target">Выберите цель для атаки (или нажмите на другую карту)</string>
+    <string name="your_turn">Ваш ход. Выберите карту для атаки</string>
+    <string name="enemy_turn">Ход противника...</string>
+    <string name="victory">ПОБЕДА!</string>
+    <string name="defeat">ПОРАЖЕНИЕ</string>
+    <string name="exit_battle">Выйти из боя?</string>
+    <string name="exit_warning">Это будет засчитано как поражение</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="rematch">Реванш</string>
+    <string name="exit">Выход</string>
+
+    <!-- Инвентарь -->
+    <string name="deck">Колода</string>
+    <string name="cards">Карты</string>
+    <string name="unavailable">Недоступно</string>
+    <string name="my_deck">Моя колода</string>
+    <string name="my_cards">Мои карты</string>
+    <string name="unavailable_cards">Недоступные карты</string>
+    <string name="deck_limit">В колоде может быть максимум %d карт!</string>
+    <string name="card_moved">Карта перемещена в %s</string>
+    <string name="to_deck">колоду</string>
+    <string name="to_cards">карты</string>
+    <string name="to_unavailable">недоступные</string>
+
+    <!-- Статистика -->
+    <string name="statistics">Статистика</string>
+    <string name="total_games">Всего игр:</string>
+    <string name="wins">Победы:</string>
+    <string name="defeats">Поражения:</string>
+    <string name="technical_defeats">Технические поражения:</string>
+    <string name="cards_collected">Собрано карт:</string>
+
+    <!-- Промокоды -->
+    <string name="promo_codes">Промокоды</string>
+    <string name="enter_promo">Введите промокод</string>
+    <string name="activate">Активировать</string>
+    <string name="invalid_promo">Неверный промокод</string>
+    <string name="promo_activated">Промокод активирован!</string>
+    <string name="promo_already_used">Промокод уже использован</string>
+
+    <!-- Титры -->
+    <string name="credits">Титры</string>
+    <string name="developer">Разработчик</string>
+    <string name="designer">Дизайнер</string>
+    <string name="artist">Художник</string>
+    <string name="music">Музыка</string>
+    <string name="tester">Тестировщик</string>
+    <string name="special_thanks">Особая благодарность</string>
+    <string name="version">Версия</string>
+</resources>

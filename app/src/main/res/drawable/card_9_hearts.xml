@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/card_template" />
+    <item>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="9♥"
+            android:textSize="40sp"
+            android:textColor="#FF4444"
+            android:gravity="center"
+            android:fontFamily="sans-serif-black" />
+    </item>
+</layer-list>

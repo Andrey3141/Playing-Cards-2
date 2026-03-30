@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Card Game 2</string>
+
+    <!-- Card Special Features -->
+    <string name="special_extra_attack">20% chance to attack again</string>
+    <string name="special_triggered">🔥 %s attacks again! 🔥</string>
+    <string name="special_extra_attack_hint">Extra Attack</string>
+
+    <!-- Interface -->
+    <string name="select_target">Select a target to attack (or tap another card)</string>
+    <string name="your_turn">Your turn. Select a card to attack</string>
+    <string name="enemy_turn">Enemy turn...</string>
+    <string name="victory">VICTORY!</string>
+    <string name="defeat">DEFEAT</string>
+    <string name="exit_battle">Exit battle?</string>
+    <string name="exit_warning">This will count as a defeat</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="rematch">Rematch</string>
+    <string name="exit">Exit</string>
+
+    <!-- Inventory -->
+    <string name="deck">Deck</string>
+    <string name="cards">Cards</string>
+    <string name="unavailable">Unavailable</string>
+    <string name="my_deck">My deck</string>
+    <string name="my_cards">My cards</string>
+    <string name="unavailable_cards">Unavailable cards</string>
+    <string name="deck_limit">Maximum %d cards in deck!</string>
+    <string name="card_moved">Card moved to %s</string>
+    <string name="to_deck">deck</string>
+    <string name="to_cards">cards</string>
+    <string name="to_unavailable">unavailable</string>
+
+    <!-- Statistics -->
+    <string name="statistics">Statistics</string>
+    <string name="total_games">Total games:</string>
+    <string name="wins">Wins:</string>
+    <string name="defeats">Defeats:</string>
+    <string name="technical_defeats">Technical defeats:</string>
+    <string name="cards_collected">Cards collected:</string>
+
+    <!-- Promo Codes -->
+    <string name="promo_codes">Promo Codes</string>
+    <string name="enter_promo">Enter promo code</string>
+    <string name="activate">Activate</string>
+    <string name="invalid_promo">Invalid promo code</string>
+    <string name="promo_activated">Promo code activated!</string>
+    <string name="promo_already_used">Promo code already used</string>
+
+    <!-- Credits -->
+    <string name="credits">Credits</string>
+    <string name="developer">Developer</string>
+    <string name="designer">Designer</string>
+    <string name="artist">Artist</string>
+    <string name="music">Music</string>
+    <string name="tester">Tester</string>
+    <string name="special_thanks">Special thanks</string>
+    <string name="version">Version</string>
+</resources>

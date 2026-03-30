@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:maxHeight="500dp"
+    android:background="@drawable/bg_stats">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Первый отзыв -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/bg_review_item">
+
+            <!-- Шапка отзыва -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp">
+
+                <!-- Аватар (круг) -->
+                <View
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_avatar"
+                    android:layout_marginEnd="12dp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/review1Name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Имя"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#FFFFFF"
+                        android:fontFamily="@font/montserrat_bold" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="4dp">
+
+                        <View
+                            android:id="@+id/review1Rating"
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:background="@drawable/bg_rating_dot"
+                            android:layout_marginEnd="6dp" />
+
+                        <TextView
+                            android:id="@+id/review1Stars"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="★★★★★"
+                            android:textSize="12sp"
+                            android:textColor="#FFD700" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2 дня назад"
+                    android:textSize="10sp"
+                    android:textColor="#80FFFFFF" />
+
+            </LinearLayout>
+
+            <!-- Текст отзыва -->
+            <TextView
+                android:id="@+id/review1Text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Текст отзыва"
+                android:textSize="13sp"
+                android:textColor="#E0E0E0"
+                android:lineSpacingExtra="4dp"
+                android:paddingHorizontal="12dp"
+                android:paddingBottom="8dp" />
+
+            <!-- Ответ разработчика -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_response"
+                android:padding="12dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginBottom="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/response1Name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Разработчик"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="#FFD700"
+                        android:fontFamily="@font/montserrat_bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" • ответил"
+                        android:textSize="10sp"
+                        android:textColor="#80FFFFFF"
+                        android:layout_marginStart="4dp" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/response1Text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Ответ разработчика"
+                    android:textSize="12sp"
+                    android:textColor="#CCCCCC"
+                    android:lineSpacingExtra="4dp"
+                    android:layout_marginTop="6dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Второй отзыв (положительный) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/bg_review_item">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp">
+
+                <View
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_avatar"
+                    android:layout_marginEnd="12dp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/review2Name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CardMaster_666"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#FFFFFF"
+                        android:fontFamily="@font/montserrat_bold" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="4dp">
+
+                        <View
+                            android:id="@+id/review2Rating"
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:background="@drawable/bg_rating_dot"
+                            android:layout_marginEnd="6dp" />
+
+                        <TextView
+                            android:id="@+id/review2Stars"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="★★★★★"
+                            android:textSize="12sp"
+                            android:textColor="#FFD700" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5 дней назад"
+                    android:textSize="10sp"
+                    android:textColor="#80FFFFFF" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/review2Text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Реально залипательная игра! Особенности карт делают геймплей непредсказуемым."
+                android:textSize="13sp"
+                android:textColor="#E0E0E0"
+                android:lineSpacingExtra="4dp"
+                android:paddingHorizontal="12dp"
+                android:paddingBottom="8dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_response"
+                android:padding="12dp"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginBottom="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/response2Name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Разработчик"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="#FFD700"
+                        android:fontFamily="@font/montserrat_bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" • ответил"
+                        android:textSize="10sp"
+                        android:textColor="#80FFFFFF"
+                        android:layout_marginStart="4dp" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/response2Text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Спасибо за теплые слова! Очень приятно читать такие отзывы!"
+                    android:textSize="12sp"
+                    android:textColor="#CCCCCC"
+                    android:lineSpacingExtra="4dp"
+                    android:layout_marginTop="6dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Третий отзыв (конструктивный) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_review_item">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp">
+
+                <View
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_avatar"
+                    android:layout_marginEnd="12dp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/review3Name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TestPlayer_2024"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#FFFFFF"
+                        android:fontFamily="@font/montserrat_bold" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="4dp">
+
+                        <View
+                            android:id="@+id/review3Rating"
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:background="@drawable/bg_rating_dot"
+                            android:layout_marginEnd="6dp" />
+
+                        <TextView
+                            android:id="@+id/review3Stars"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="★★★★☆"
+                            android:textSize="12sp"
+                            android:textColor="#FFD700" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="неделю назад"
+                    android:textSize="10sp"
+                    android:textColor="#80FFFFFF" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/review3Text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Игра крутая, но хотелось бы добавить режим PvP и больше карт. Еще заметил баг с оглушением."
+                android:textSize="13sp"
+                android:textColor="#E0E0E0"
+                android:lineSpacingExtra="4dp"
+                android:paddingHorizontal="12dp"
+                android:paddingBottom="8dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_response"
+                android:padding="12dp"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginBottom="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/response3Name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Разработчик"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="#FFD700"
+                        android:fontFamily="@font/montserrat_bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" • ответил"
+                        android:textSize="10sp"
+                        android:textColor="#80FFFFFF"
+                        android:layout_marginStart="4dp" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/response3Text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Спасибо за отзыв! Баг уже исправлен. PvP и новые карты в разработке!"
+                    android:textSize="12sp"
+                    android:textColor="#CCCCCC"
+                    android:lineSpacingExtra="4dp"
+                    android:layout_marginTop="6dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

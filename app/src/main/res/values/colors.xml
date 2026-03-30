@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Основные цвета -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="transparent">#00000000</color>
+
+    <!-- Премиальная палитра -->
+    <color name="premium_gold">#FFD700</color>
+    <color name="premium_rose_gold">#B76E79</color>
+    <color name="premium_silver">#C0C0C0</color>
+    <color name="premium_platinum">#E5E4E2</color>
+    <color name="premium_burgundy">#800020</color>
+    <color name="premium_navy">#000080</color>
+    <color name="premium_emerald">#50C878</color>
+    <color name="premium_sapphire">#0F52BA</color>
+    <color name="premium_ruby">#E0115F</color>
+    <color name="premium_amethyst">#9966CC</color>
+
+    <!-- Карточные цвета -->
+    <color name="card_red">#DC143C</color>
+    <color name="card_black">#2C3E50</color>
+    <color name="card_gold">#FFB347</color>
+
+    <!-- Кнопки с премиум эффектами -->
+    <color name="play_gradient_start">#FFD700</color>
+    <color name="play_gradient_center">#FFA500</color>
+    <color name="play_gradient_end">#FF8C00</color>
+
+    <color name="inventory_gradient_start">#50C878</color>
+    <color name="inventory_gradient_center">#3CB371</color>
+    <color name="inventory_gradient_end">#2E8B57</color>
+
+    <color name="shop_gradient_start">#0F52BA</color>
+    <color name="shop_gradient_center">#1E90FF</color>
+    <color name="shop_gradient_end">#00BFFF</color>
+
+    <color name="settings_gradient_start">#9966CC</color>
+    <color name="settings_gradient_center">#8A2BE2</color>
+    <color name="settings_gradient_end">#9400D3</color>
+
+    <!-- Цвета для редкостей карт -->
+    <color name="rarity_common">#808080</color>       <!-- Серый -->
+    <color name="rarity_rare">#2ECC71</color>        <!-- Зеленый -->
+    <color name="rarity_super_rare">#3498DB</color>  <!-- Синий -->
+    <color name="rarity_epic">#9B59B6</color>        <!-- Фиолетовый -->
+    <color name="rarity_mythic">#E74C3C</color>      <!-- Красный -->
+    <color name="rarity_legendary">#F1C40F</color>   <!-- Золотой -->
+    <color name="rarity_custom">#FF69B4</color>      <!-- Розовый -->
+
+</resources>

@@ -1,0 +1,62 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Рыцарский щит (профессиональный) -->
+
+    <!-- Основная форма щита (геральдический треугольник) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.5"
+        android:pathData="M12,2 L4,8 L4,16 L12,22 L20,16 L20,8 L12,2z"/>
+
+    <!-- Внутренний контур для объема -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.3"
+        android:pathData="M12,3.5 L5.5,8.5 L5.5,15.5 L12,20.5 L18.5,15.5 L18.5,8.5 L12,3.5z"/>
+
+    <!-- Центральный геральдический крест -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.4"
+        android:pathData="M12,7 L12,17 M8,12 L16,12"/>
+
+    <!-- Золотая окантовка креста -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFC107"
+        android:strokeWidth="0.25"
+        android:pathData="M12,7 L12,17 M8,12 L16,12"/>
+
+    <!-- Боковые декоративные линии (чеканка) -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.25"
+        android:pathData="M7.5,10 L9,11.5 M16.5,10 L15,11.5"/>
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.25"
+        android:pathData="M8,14 L9.5,13 M16,14 L14.5,13"/>
+
+    <!-- Нижний декоративный элемент -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.3"
+        android:pathData="M10,18 L12,19.5 L14,18"/>
+
+    <!-- Золотой акцент на нижнем декоре -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFC107"
+        android:strokeWidth="0.2"
+        android:pathData="M10,18 L12,19.5 L14,18"/>
+</vector>
