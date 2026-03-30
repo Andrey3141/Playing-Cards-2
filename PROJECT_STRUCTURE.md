@@ -9,16 +9,17 @@ PlayingCards2/
 │   │   ├── main/
 │   │   │   ├── java/com/printer/playingcards2/
 │   │   │   │   ├── MainActivity.kt                 # Главное меню
-│   │   │   │   ├── SplashActivity.kt               # Экран дисклеймера
+│   │   │   │   ├── SplashActivity.kt               # Экран дисклеймера + проверка обновлений
 │   │   │   │   ├── InventoryActivity.kt            # Инвентарь
 │   │   │   │   ├── GameActivity.kt                 # Игровой процесс
-│   │   │   │   ├── SettingsActivity.kt             # Настройки
+│   │   │   │   ├── SettingsActivity.kt             # Настройки + промокоды
 │   │   │   │   ├── GameModeDialog.kt               # Диалог выбора режима
 │   │   │   │   ├── CardDetailDialog.kt             # Диалог деталей карты
 │   │   │   │   ├── CardAdapter.kt                  # Адаптер карт в инвентаре
 │   │   │   │   ├── GameCardAdapter.kt              # Адаптер карт в игре
 │   │   │   │   ├── CreditsAdapter.kt               # Адаптер титров
-│   │   │   │   ├── CardSpecialEffect.kt            # Управление особенностями карт
+│   │   │   │   ├── CardSpecialEffect.kt            # Управление особенностями карт (13 карт)
+│   │   │   │   ├── UpdateChecker.kt                # Проверка обновлений на GitHub
 │   │   │   │   ├── Card.kt                         # Модель карты
 │   │   │   │   ├── GameCard.kt                     # Модель карты для игры
 │   │   │   │   ├── PromoCode.kt                    # Модель промокода
@@ -95,6 +96,9 @@ PlayingCards2/
 │   │   │   │   │   ├── ic_nature.xml
 │   │   │   │   │   ├── ic_global_attack.xml
 │   │   │   │   │   ├── ic_tea.xml
+│   │   │   │   │   ├── ic_skull.xml
+│   │   │   │   │   ├── ic_dream.xml
+│   │   │   │   │   ├── ic_illusion.xml
 │   │   │   │   │   ├── ic_github.xml
 │   │   │   │   │   ├── ic_balloon.xml
 │   │   │   │   │   ├── ic_offline.xml

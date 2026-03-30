@@ -1,0 +1,87 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Левый меч (вертикальный, остриём вверх) -->
+    <group
+        android:translateX="4">
+        <!-- Клинок (основной) -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeColor="#000000"
+            android:strokeWidth="0.5"
+            android:pathData="M12,4 L10.5,11 L10,13 L14,13 L13.5,11 L12,4z"/>
+
+        <!-- Закрашенное остриё (спущено ниже) -->
+        <path
+            android:fillColor="#FF0000"
+            android:strokeColor="#000000"
+            android:strokeWidth="0.4"
+            android:pathData="M12,4 L11.2,7.5 L12.8,7.5 L12,4z"/>
+
+        <!-- Крестовина -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeColor="#000000"
+            android:strokeWidth="0.5"
+            android:pathData="M10,13 L14,13 L14,14 L10,14 L10,13z"/>
+
+        <!-- Рукоять -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeColor="#000000"
+            android:strokeWidth="0.5"
+            android:pathData="M11,14 L13,14 L13,18 L11,18 L11,14z"/>
+
+        <!-- Навершие -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeColor="#000000"
+            android:strokeWidth="0.5"
+            android:pathData="M10,18 L14,18 L14,19.5 L10,19.5 L10,18z"/>
+    </group>
+
+    <!-- Правый меч (горизонтальный, остриём вправо) -->
+    <group
+        android:translateX="15"
+        android:rotation="180"
+        android:pivotX="3"
+        android:pivotY="12">
+        <!-- Клинок (основной) -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeColor="#000000"
+            android:strokeWidth="0.5"
+            android:pathData="M12,4 L10.5,11 L10,13 L14,13 L13.5,11 L12,4z"/>
+
+        <!-- Закрашенное остриё (спущено ниже) -->
+        <path
+            android:fillColor="#FF0000"
+            android:strokeColor="#000000"
+            android:strokeWidth="0.4"
+            android:pathData="M12,4 L11.2,7.5 L12.8,7.5 L12,4z"/>
+
+        <!-- Крестовина -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeColor="#000000"
+            android:strokeWidth="0.5"
+            android:pathData="M10,13 L14,13 L14,14 L10,14 L10,13z"/>
+
+        <!-- Рукоять -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeColor="#000000"
+            android:strokeWidth="0.5"
+            android:pathData="M11,14 L13,14 L13,18 L11,18 L11,14z"/>
+
+        <!-- Навершие -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeColor="#000000"
+            android:strokeWidth="0.5"
+            android:pathData="M10,18 L14,18 L14,19.5 L10,19.5 L10,18z"/>
+    </group>
+</vector>

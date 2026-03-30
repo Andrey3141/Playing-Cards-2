@@ -19,7 +19,10 @@ object CardSpecialEffect {
         HEAL,              // Лечение
         NATURE_BUFF,       // Бафф природы
         GLOBAL_ATTACK_BUFF, // Глобальный бафф атаки
-        TEA_BUFF           // Бафф чая
+        TEA_BUFF,          // Бафф чая
+        KILL_STRONGEST,    // Убить сильнейшего
+        DREAMER_BUFF,      // Бафф фантазера
+        ILLUSION           // Иллюзия
     }
 
     data class TriggeredEffect(
@@ -213,10 +216,6 @@ object CardSpecialEffect {
 
     /**
      * Проверяет эффект "Чай" (id=10)
-     * @return Triple(attackBonus, hitAlly, allyTarget)
-     * attackBonus - бонус к атаке (0 или 18)
-     * hitAlly - true если атакует своего
-     * allyTarget - карта союзника, если hitAlly = true
      */
     fun checkTeaTrigger(attacker: GameCard, allAllies: List<GameCard>): Triple<Int, Boolean, GameCard?> {
         var attackBonus = 0
@@ -224,12 +223,10 @@ object CardSpecialEffect {
         var allyTarget: GameCard? = null
 
         if (attacker.originalCard.id == 10 && attacker.isAlive) {
-            // 65% шанс на бафф
             val buffChance = Random.nextInt(100)
             if (buffChance < 65) {
                 attackBonus = 18
 
-                // 60% шанс на дружественный огонь
                 val friendlyFireChance = Random.nextInt(100)
                 if (friendlyFireChance < 60) {
                     hitAlly = true
@@ -242,6 +239,80 @@ object CardSpecialEffect {
         }
 
         return Triple(attackBonus, hitAlly, allyTarget)
+    }
+
+    /**
+     * Проверяет эффект "Курсовая" (id=11) - убивает сильнейшую карту врага
+     */
+    fun checkKillStrongestTrigger(attacker: GameCard, allEnemyCards: List<GameCard>): Pair<GameCard?, Boolean> {
+        var strongestCard: GameCard? = null
+        var shouldKillSelf = false
+
+        if (attacker.originalCard.id == 11 && attacker.isAlive) {
+            val chance = Random.nextInt(100)
+            if (chance < 90) {
+                shouldKillSelf = true
+                val aliveEnemies = allEnemyCards.filter { it.isAlive }
+                if (aliveEnemies.isNotEmpty()) {
+                    strongestCard = aliveEnemies.maxByOrNull { card ->
+                        card.currentAttack + card.currentDefense + card.currentHealth
+                    }
+                }
+            }
+        }
+
+        return Pair(strongestCard, shouldKillSelf)
+    }
+
+    /**
+     * Проверяет эффект "Фантазер" (id=12)
+     */
+    fun checkDreamerTrigger(attacker: GameCard): Triple<Int, Boolean, Boolean> {
+        var attackBonus = 0
+        var skipTurn = false
+        var shouldStun = false
+
+        if (attacker.originalCard.id == 12 && attacker.isAlive) {
+            val buffChance = Random.nextInt(100)
+            if (buffChance < 50) {
+                attackBonus = 20
+
+                val skipChance = Random.nextInt(100)
+                if (skipChance < 40) {
+                    skipTurn = true
+                    shouldStun = true
+                }
+            }
+        }
+
+        return Triple(attackBonus, skipTurn, shouldStun)
+    }
+
+    /**
+     * Проверяет эффект "Стример-неудачник" (id=13)
+     * @return Triple(attackBonus, isIllusion, originalHealth)
+     */
+    fun checkIllusionTrigger(attacker: GameCard, target: GameCard): Triple<Int, Boolean, Int> {
+        var attackBonus = 0
+        var isIllusion = false
+        var originalHealth = target.currentHealth
+
+        if (attacker.originalCard.id == 13 && attacker.isAlive) {
+            // 40% шанс на бонус
+            val bonusChance = Random.nextInt(100)
+            if (bonusChance < 40) {
+                attackBonus = 12
+
+                // 70% шанс что это иллюзия
+                val illusionChance = Random.nextInt(100)
+                if (illusionChance < 70) {
+                    isIllusion = true
+                    originalHealth = target.currentHealth // Запоминаем здоровье ДО атаки с бонусом
+                }
+            }
+        }
+
+        return Triple(attackBonus, isIllusion, originalHealth)
     }
 
     /**
@@ -335,9 +406,36 @@ object CardSpecialEffect {
         // "Чай" (id=10)
         if (card.originalCard.id == 10) {
             icons.add(SpecialEffectInfo(
-                iconResId = R.drawable.ic_nature,
-                description = "65% атака +18, но 60% шанс задеть своих",
+                iconResId = R.drawable.ic_tea,
+                description = "65% атака +18, но 60% задеть своих",
                 cardId = 10
+            ))
+        }
+
+        // "Курсовая" (id=11)
+        if (card.originalCard.id == 11) {
+            icons.add(SpecialEffectInfo(
+                iconResId = R.drawable.ic_skull,
+                description = "90% убивает сильнейшую карту, но сам умирает",
+                cardId = 11
+            ))
+        }
+
+        // "Фантазер" (id=12)
+        if (card.originalCard.id == 12) {
+            icons.add(SpecialEffectInfo(
+                iconResId = R.drawable.ic_dream,
+                description = "50% атака +20, но 40% пропуск хода",
+                cardId = 12
+            ))
+        }
+
+        // "Стример-неудачник" (id=13)
+        if (card.originalCard.id == 13) {
+            icons.add(SpecialEffectInfo(
+                iconResId = R.drawable.ic_illusion,
+                description = "40% атака +12, но 70% иллюзия",
+                cardId = 13
             ))
         }
 
@@ -381,7 +479,10 @@ object CardSpecialEffect {
             7 -> "80% +15 здоровья, но пропуск хода"
             8 -> "50% +10 к атаке на весь бой, но 40% -5 к защите и здоровью"
             9 -> "60% +39% урона всем картам"
-            10 -> "65% атака +18, но 60% шанс задеть своих"
+            10 -> "65% атака +18, но 60% задеть своих"
+            11 -> "90% убивает сильнейшую карту, но сам умирает"
+            12 -> "50% атака +20, но 40% пропуск хода"
+            13 -> "40% атака +12, но 70% что это иллюзия"
             else -> card.specialFeature
         }
     }

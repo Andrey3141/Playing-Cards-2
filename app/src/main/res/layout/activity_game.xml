@@ -1,168 +1,180 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_game_gradient"
-    android:animateLayoutChanges="true">
+    android:layout_height="match_parent">
 
-    <!-- Декоративные квадратики -->
-    <View
-        android:id="@+id/decorSquare1"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:background="@drawable/bg_blur_square"
-        android:alpha="0.06"
-        android:translationX="-50dp"
-        android:translationY="-40dp"
-        android:rotation="12"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <View
-        android:id="@+id/decorSquare2"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:background="@drawable/bg_blur_square_purple"
-        android:alpha="0.04"
-        android:translationX="80dp"
-        android:translationY="280dp"
-        android:rotation="-8"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- Стеклянная карточка -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/glassCard"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="28dp"
-        app:cardElevation="16dp"
-        app:cardBackgroundColor="#B3FFFFFF"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- Кнопка выхода -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/backButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_margin="20dp"
-        app:cardCornerRadius="24dp"
-        app:cardElevation="6dp"
-        app:cardBackgroundColor="#33FFFFFF"
-        app:strokeWidth="1dp"
-        app:strokeColor="#80FFFFFF"
-        android:foreground="?android:attr/selectableItemBackgroundBorderless"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_arrow_back"
-            android:tint="#FFFFFF"
-            android:layout_gravity="center" />
-
-    </com.google.android.material.card.MaterialCardView>
-
-    <!-- Индикатор хода -->
-    <ImageView
-        android:id="@+id/turnIndicator"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:src="@drawable/ic_player_turn"
-        android:tint="#FFD700"
-        android:alpha="0.9"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="20dp" />
-
-    <!-- Кто начинает текст -->
-    <TextView
-        android:id="@+id/whoStartsText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="#FFD700"
-        android:fontFamily="@font/playfair_display_bold"
-        android:gravity="center"
-        android:visibility="visible"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- Поле боя -->
-    <androidx.core.widget.NestedScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:fillViewport="true"
-        android:clipToPadding="false"
-        android:paddingHorizontal="20dp"
-        android:paddingBottom="20dp"
-        app:layout_constraintTop_toBottomOf="@id/backButton"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_game_gradient"
+        android:animateLayoutChanges="true">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <!-- Декоративные квадратики -->
+        <View
+            android:id="@+id/decorSquare1"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:background="@drawable/bg_blur_square"
+            android:alpha="0.06"
+            android:translationX="-50dp"
+            android:translationY="-40dp"
+            android:rotation="12"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/decorSquare2"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:background="@drawable/bg_blur_square_purple"
+            android:alpha="0.04"
+            android:translationX="80dp"
+            android:translationY="280dp"
+            android:rotation="-8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Стеклянная карточка -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/glassCard"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="16dp"
+            app:cardCornerRadius="28dp"
+            app:cardElevation="16dp"
+            app:cardBackgroundColor="#B3FFFFFF"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Кнопка выхода -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/backButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="20dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="6dp"
+            app:cardBackgroundColor="#33FFFFFF"
+            app:strokeWidth="1dp"
+            app:strokeColor="#80FFFFFF"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_arrow_back"
+                android:tint="#FFFFFF"
+                android:layout_gravity="center" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Индикатор хода -->
+        <ImageView
+            android:id="@+id/turnIndicator"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_player_turn"
+            android:tint="#FFD700"
+            android:alpha="0.9"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="20dp" />
+
+        <!-- Кто начинает текст -->
+        <TextView
+            android:id="@+id/whoStartsText"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:text=""
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#FFD700"
+            android:fontFamily="@font/playfair_display_bold"
+            android:gravity="center"
+            android:visibility="visible"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-            <!-- Карты противника -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/enemyCardsRecyclerView"
+        <!-- Поле боя -->
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            android:clipToPadding="false"
+            android:paddingHorizontal="20dp"
+            android:paddingBottom="20dp"
+            app:layout_constraintTop_toBottomOf="@id/backButton"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:padding="8dp"
-                android:layout_marginTop="40dp"
-                android:layout_marginBottom="24dp"
-                android:clipToPadding="false" />
+                android:orientation="vertical"
+                android:gravity="center">
 
-            <!-- Статус боя -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="4dp"
-                app:cardBackgroundColor="#20FFFFFF"
-                android:layout_marginVertical="24dp"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="10dp">
+                <!-- Карты противника -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/enemyCardsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:padding="8dp"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginBottom="24dp"
+                    android:clipToPadding="false" />
 
-                <TextView
-                    android:id="@+id/battleStatusText"
+                <!-- Статус боя -->
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Нажмите на карту для атаки"
-                    android:textSize="13sp"
-                    android:textColor="#FFD700"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:letterSpacing="0.05" />
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="4dp"
+                    app:cardBackgroundColor="#20FFFFFF"
+                    android:layout_marginVertical="24dp"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="10dp">
 
-            </com.google.android.material.card.MaterialCardView>
+                    <TextView
+                        android:id="@+id/battleStatusText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Нажмите на карту для атаки"
+                        android:textSize="13sp"
+                        android:textColor="#FFD700"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:letterSpacing="0.05" />
 
-            <!-- Карты игрока -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/playerCardsRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:padding="8dp"
-                android:clipToPadding="false" />
+                </com.google.android.material.card.MaterialCardView>
 
-        </LinearLayout>
+                <!-- Карты игрока -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/playerCardsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:padding="8dp"
+                    android:clipToPadding="false" />
 
-    </androidx.core.widget.NestedScrollView>
+            </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Контейнер для оверлеев иллюзии -->
+    <FrameLayout
+        android:id="@+id/overlayContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+</FrameLayout>

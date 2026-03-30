@@ -4,6 +4,8 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Intent
 import android.content.res.Configuration
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -11,6 +13,8 @@ import android.os.Looper
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 
 class SplashActivity : AppCompatActivity() {
@@ -23,6 +27,7 @@ class SplashActivity : AppCompatActivity() {
     private var fadeOutRunnable: Runnable? = null
     private var isFinished = false
     private var isTransitioning = false
+    private var pendingUpdateDialog = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,12 +49,71 @@ class SplashActivity : AppCompatActivity() {
         initViews()
         startDisclaimerAnimation()
         setupSkipClickListener()
+
+        // Проверяем обновления
+        checkForUpdate()
+    }
+
+    private fun checkForUpdate() {
+        // Проверяем интернет
+        if (!isNetworkAvailable()) {
+            // Нет интернета — просто запускаем таймер
+            return
+        }
+
+        val updateChecker = UpdateChecker(this) { isAvailable, latestVersion, downloadUrl ->
+            if (isAvailable && downloadUrl != null && !pendingUpdateDialog && !isFinished && !isTransitioning) {
+                pendingUpdateDialog = true
+                // Отменяем таймер перехода
+                cancelFadeOutTimer()
+
+                showUpdateDialog(latestVersion ?: "неизвестная", downloadUrl)
+            }
+        }
+        updateChecker.checkForUpdates()
+    }
+
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val network = connectivityManager.activeNetwork
+            val capabilities = connectivityManager.getNetworkCapabilities(network)
+            return capabilities != null && (
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
+                    )
+        } else {
+            @Suppress("DEPRECATION")
+            val networkInfo = connectivityManager.activeNetworkInfo
+            return networkInfo != null && networkInfo.isConnected
+        }
+    }
+
+    private fun showUpdateDialog(latestVersion: String, downloadUrl: String) {
+        AlertDialog.Builder(this)
+            .setTitle("🔄 Доступно обновление!")
+            .setMessage("Версия $latestVersion уже доступна.\n\nХотите перейти на GitHub и скачать новую версию?")
+            .setPositiveButton("Обновить") { _, _ ->
+                // Открываем браузер
+                val intent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse(downloadUrl))
+                startActivity(intent)
+                // После открытия браузера всё равно переходим в главное меню
+                finishAndGoToMain()
+            }
+            .setNegativeButton("Позже") { _, _ ->
+                pendingUpdateDialog = false
+                // Возвращаем таймер
+                startFadeOutTimer()
+            }
+            .setCancelable(false)
+            .show()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         // При повороте отменяем старый таймер и запускаем новый
-        if (!isFinished && !isTransitioning) {
+        if (!isFinished && !isTransitioning && !pendingUpdateDialog) {
             cancelFadeOutTimer()
             startFadeOutTimer()
         }
@@ -64,7 +128,7 @@ class SplashActivity : AppCompatActivity() {
     private fun setupSkipClickListener() {
         val rootView = findViewById<View>(android.R.id.content)
         rootView.setOnClickListener {
-            if (!isFinished && !isTransitioning) {
+            if (!isFinished && !isTransitioning && !pendingUpdateDialog) {
                 skipDisclaimer()
             }
         }
@@ -116,7 +180,7 @@ class SplashActivity : AppCompatActivity() {
     private fun startFadeOutTimer() {
         cancelFadeOutTimer()
         fadeOutRunnable = Runnable {
-            if (!isFinished && !isTransitioning) {
+            if (!isFinished && !isTransitioning && !pendingUpdateDialog) {
                 startFadeOutAnimation()
             }
         }
@@ -168,10 +232,8 @@ class SplashActivity : AppCompatActivity() {
         isFinished = true
         isTransitioning = true
 
-        // ОТМЕНЯЕМ ТАЙМЕР - КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ
         cancelFadeOutTimer()
 
-        // Сразу переходим
         finishAndGoToMain()
     }
 

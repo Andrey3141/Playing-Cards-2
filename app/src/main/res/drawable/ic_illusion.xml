@@ -1,0 +1,67 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Белок глаза (фон) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.5"
+        android:pathData="M2,10 C2,10 5,2 12,2 C19,2 22,10 22,10 C22,10 19,18 12,18 C5,18 2,10 2,10 Z"/>
+
+    <!-- Радужка (цветная часть) -->
+    <path
+        android:fillColor="#4FC3F7"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.3"
+        android:pathData="M12,5 A6,6 0 1,0 12,17 A6,6 0 1,0 12,5 Z"/>
+
+    <!-- Зрачок (черный) -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M12,7 A4,4 0 1,0 12,15 A4,4 0 1,0 12,7 Z"/>
+
+    <!-- Меч в зрачке (увеличенный и повёрнутый на 45°) -->
+    <group
+        android:translateX="13"
+        android:translateY="10.5"
+        android:rotation="45"
+        android:scaleX="0.6"
+        android:scaleY="0.6">
+        <!-- Клинок -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeColor="#000000"
+            android:strokeWidth="0.5"
+            android:pathData="M0,-4 L-1,2 L-1.2,3 L1.2,3 L1,2 L0,-4z"/>
+        <!-- Крестовина -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeColor="#000000"
+            android:strokeWidth="0.5"
+            android:pathData="M-1.2,3 L1.2,3 L1.2,3.5 L-1.2,3.5 L-1.2,3z"/>
+        <!-- Рукоять -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeColor="#000000"
+            android:strokeWidth="0.5"
+            android:pathData="M-0.6,3.5 L0.6,3.5 L0.6,5.5 L-0.6,5.5 L-0.6,3.5z"/>
+        <!-- Навершие -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeColor="#000000"
+            android:strokeWidth="0.5"
+            android:pathData="M-0.9,5.5 L0.9,5.5 L0.9,6.3 L-0.9,6.3 L-0.9,5.5z"/>
+    </group>
+
+    <!-- Блики -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M9.5,8.5 A1,1 0 1,0 9.5,10.5 A1,1 0 1,0 9.5,8.5 Z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M14,13 A0.8,0.8 0 1,0 14,14.6 A0.8,0.8 0 1,0 14,13 Z"/>
+
+</vector>

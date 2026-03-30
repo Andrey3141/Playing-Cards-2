@@ -3,6 +3,9 @@ package com.printer.playingcards2
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnticipateOvershootInterpolator
@@ -13,6 +16,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.core.animation.doOnEnd
@@ -31,9 +35,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var inventoryCard: CardView
     private lateinit var shopCard: CardView
     private lateinit var settingsCard: CardView
-    // private lateinit var glassCard: CardView  // Закомментировано
     private lateinit var card1: ImageView
     private lateinit var card2: ImageView
+
+    private var updateDialogShown = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +50,59 @@ class MainActivity : AppCompatActivity() {
         startEntranceAnimation()
         setupButtonListeners()
         setupCardAnimations()
+
+        // Проверяем обновления
+        checkForUpdate()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // При возврате в приложение проверяем обновления, если диалог еще не показывали
+        if (!updateDialogShown) {
+            checkForUpdate()
+        }
+    }
+
+    private fun checkForUpdate() {
+        if (!isNetworkAvailable()) return
+
+        val updateChecker = UpdateChecker(this) { isAvailable, latestVersion, downloadUrl ->
+            if (isAvailable && downloadUrl != null && !updateDialogShown) {
+                updateDialogShown = true
+                showUpdateDialog(latestVersion ?: "неизвестная", downloadUrl)
+            }
+        }
+        updateChecker.checkForUpdates()
+    }
+
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val network = connectivityManager.activeNetwork
+            val capabilities = connectivityManager.getNetworkCapabilities(network)
+            return capabilities != null && (
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
+                    )
+        } else {
+            @Suppress("DEPRECATION")
+            val networkInfo = connectivityManager.activeNetworkInfo
+            return networkInfo != null && networkInfo.isConnected
+        }
+    }
+
+    private fun showUpdateDialog(latestVersion: String, downloadUrl: String) {
+        AlertDialog.Builder(this)
+            .setTitle("🔄 Доступно обновление!")
+            .setMessage("Версия $latestVersion уже доступна.\n\nХотите перейти на GitHub и скачать новую версию?")
+            .setPositiveButton("Обновить") { _, _ ->
+                val intent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse(downloadUrl))
+                startActivity(intent)
+            }
+            .setNegativeButton("Позже", null)
+            .setCancelable(true)
+            .show()
     }
 
     private fun initViews() {
@@ -58,7 +116,6 @@ class MainActivity : AppCompatActivity() {
         inventoryCard = findViewById(R.id.inventoryCard)
         shopCard = findViewById(R.id.shopCard)
         settingsCard = findViewById(R.id.settingsCard)
-        // glassCard = findViewById(R.id.glassCard)  // Закомментировано
         card1 = findViewById(R.id.card1)
         card2 = findViewById(R.id.card2)
     }
@@ -143,7 +200,6 @@ class MainActivity : AppCompatActivity() {
     private fun setupButtonListeners() {
         playButton.setOnClickListener {
             animateButtonClick(it) {
-                // Показываем диалог выбора режима
                 val dialog = GameModeDialog(this)
                 dialog.show()
             }
@@ -173,7 +229,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun animateButtonClick(view: View, action: () -> Unit) {
-        // Анимация нажатия
         val scaleDown = ObjectAnimator.ofPropertyValuesHolder(
             view,
             PropertyValuesHolder.ofFloat("scaleX", 0.95f),
@@ -204,7 +259,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupCardAnimations() {
-        // Анимация парящих карт
         animateFloatingCard(card1, -15f, 3000)
         animateFloatingCard(card2, 20f, 3500)
     }
