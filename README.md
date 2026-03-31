@@ -128,7 +128,7 @@
 
 ```bash
 # 1. Скачайте последнюю версию
-[![Download APK](https://img.shields.io/badge/⬇️_Скачать-.apk-0078D4?style=for-the-badge&logo=android)](https://github.com/your-username/PlayingCards2/releases/latest/download/PlayingCards2.apk)
+[![Download APK](https://img.shields.io/badge/⬇️_Скачать-.apk-0078D4?style=for-the-badge&logo=android)](https://github.com/your-username/Playing-Cards-2/releases/latest/download/app-debug.apk)
 
 # 2. Установите файл
 Разрешите "Установку из неизвестных источников" при первом запуске.
@@ -157,7 +157,7 @@
 
 ```bash
 # 1. Клонируйте репозиторий
-git clone https://github.com/your-username/PlayingCards2.git
+git clone https://github.com/your-username/Playing-Cards-2.git
 cd PlayingCards2
 
 # 2. Откройте в Android Studio
@@ -353,7 +353,7 @@ description.text = credit.name
 
 ## 🚀 Скачать
 
-[![Download APK](https://img.shields.io/badge/⬇️_Скачать_Игра_в_карточки_2-.apk-3DDC84?style=for-the-badge&logo=android)](https://github.com/Andrey3141/PlayingCards2/releases)
+[![Download APK](https://img.shields.io/badge/⬇️_Скачать_Игра_в_карточки_2-.apk-3DDC84?style=for-the-badge&logo=android)](https://github.com/Andrey3141/Playing-Cards-2/releases)
 
 **Игра в карточки 2** — собирай колоду, используй особенности карт и побеждай! 🃏⚔️
 
