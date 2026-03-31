@@ -35,13 +35,9 @@ object CardSpecialEffect {
         val healAmount: Int = 0
     )
 
-    /**
-     * Проверяет сработавшие эффекты при атаке
-     */
     fun checkExtraAttackTriggers(attacker: GameCard, allCards: List<GameCard>): List<SpecialEffectInfo> {
         val triggeredEffects = mutableListOf<SpecialEffectInfo>()
 
-        // 1. "Горохострел" (id=1) - повторная атака
         if (attacker.originalCard.id == 1 && !attacker.extraAttackUsed) {
             val chance = Random.nextInt(100)
             if (chance < 20) {
@@ -54,7 +50,6 @@ object CardSpecialEffect {
             }
         }
 
-        // 2. "Древний сожитель" (id=2) - повторная атака для всех
         val ancientCompanion = allCards.find { it.originalCard.id == 2 && it.isAlive && !it.extraAttackUsed }
         if (ancientCompanion != null) {
             val chance = Random.nextInt(100)
@@ -71,9 +66,6 @@ object CardSpecialEffect {
         return triggeredEffects
     }
 
-    /**
-     * Проверяет эффект оглушения при атаке
-     */
     fun checkStunTrigger(attacker: GameCard, allEnemyCards: List<GameCard>): GameCard? {
         if (attacker.originalCard.id == 3 && attacker.isAlive) {
             val chance = Random.nextInt(100)
@@ -87,9 +79,6 @@ object CardSpecialEffect {
         return null
     }
 
-    /**
-     * Проверяет эффект удвоения атаки для "Красный дьявол" (id=4)
-     */
     fun checkDoubleAttackTrigger(attacker: GameCard): Pair<Int, Boolean> {
         var attackMultiplier = 1
         var defenseChanged = false
@@ -106,9 +95,6 @@ object CardSpecialEffect {
         return Pair(attackMultiplier, defenseChanged)
     }
 
-    /**
-     * Проверяет эффект снижения урона для "Сын депутата" (id=5)
-     */
     fun checkDamageReduction(target: GameCard): Float {
         var damageMultiplier = 1f
 
@@ -124,9 +110,6 @@ object CardSpecialEffect {
         return damageMultiplier
     }
 
-    /**
-     * Проверяет эффект усиления атаки для "Мини Пекка" (id=6)
-     */
     fun checkAttackBuffTrigger(attacker: GameCard): Pair<Int, Boolean> {
         var attackBonus = 0
         var defenseReduced = false
@@ -143,9 +126,6 @@ object CardSpecialEffect {
         return Pair(attackBonus, defenseReduced)
     }
 
-    /**
-     * Проверяет эффект лечения для "Мастер-класс" (id=7)
-     */
     fun checkHealTrigger(attacker: GameCard): Int {
         var healAmount = 0
 
@@ -160,9 +140,6 @@ object CardSpecialEffect {
         return healAmount
     }
 
-    /**
-     * Проверяет эффект "Единение с природой" (id=8)
-     */
     fun checkNatureBuffTrigger(attacker: GameCard): Triple<Int, Boolean, Boolean> {
         var attackBonus = 0
         var defenseReduced = false
@@ -191,9 +168,6 @@ object CardSpecialEffect {
         return Triple(attackBonus, defenseReduced, healthReduced)
     }
 
-    /**
-     * Проверяет эффект "Роланд Азер" (id=9) - глобальный бафф атаки
-     */
     fun checkGlobalAttackBuffTrigger(attacker: GameCard, allCards: List<GameCard>): Boolean {
         var triggered = false
 
@@ -214,9 +188,6 @@ object CardSpecialEffect {
         return triggered
     }
 
-    /**
-     * Проверяет эффект "Чай" (id=10)
-     */
     fun checkTeaTrigger(attacker: GameCard, allAllies: List<GameCard>): Triple<Int, Boolean, GameCard?> {
         var attackBonus = 0
         var hitAlly = false
@@ -241,9 +212,6 @@ object CardSpecialEffect {
         return Triple(attackBonus, hitAlly, allyTarget)
     }
 
-    /**
-     * Проверяет эффект "Курсовая" (id=11) - убивает сильнейшую карту врага
-     */
     fun checkKillStrongestTrigger(attacker: GameCard, allEnemyCards: List<GameCard>): Pair<GameCard?, Boolean> {
         var strongestCard: GameCard? = null
         var shouldKillSelf = false
@@ -264,9 +232,6 @@ object CardSpecialEffect {
         return Pair(strongestCard, shouldKillSelf)
     }
 
-    /**
-     * Проверяет эффект "Фантазер" (id=12)
-     */
     fun checkDreamerTrigger(attacker: GameCard): Triple<Int, Boolean, Boolean> {
         var attackBonus = 0
         var skipTurn = false
@@ -288,40 +253,28 @@ object CardSpecialEffect {
         return Triple(attackBonus, skipTurn, shouldStun)
     }
 
-    /**
-     * Проверяет эффект "Стример-неудачник" (id=13)
-     * @return Triple(attackBonus, isIllusion, originalHealth)
-     */
     fun checkIllusionTrigger(attacker: GameCard, target: GameCard): Triple<Int, Boolean, Int> {
         var attackBonus = 0
         var isIllusion = false
-        var originalHealth = target.currentHealth
 
         if (attacker.originalCard.id == 13 && attacker.isAlive) {
-            // 40% шанс на бонус
             val bonusChance = Random.nextInt(100)
             if (bonusChance < 40) {
                 attackBonus = 12
 
-                // 70% шанс что это иллюзия
                 val illusionChance = Random.nextInt(100)
                 if (illusionChance < 70) {
                     isIllusion = true
-                    originalHealth = target.currentHealth // Запоминаем здоровье ДО атаки с бонусом
                 }
             }
         }
 
-        return Triple(attackBonus, isIllusion, originalHealth)
+        return Triple(attackBonus, isIllusion, 0)
     }
 
-    /**
-     * Получает список иконок особенностей для карты
-     */
     fun getSpecialIcons(card: GameCard, allCards: List<GameCard>): List<SpecialEffectInfo> {
         val icons = mutableListOf<SpecialEffectInfo>()
 
-        // "Горохострел" (id=1)
         if (card.originalCard.id == 1) {
             icons.add(SpecialEffectInfo(
                 iconResId = R.drawable.ic_sword,
@@ -330,7 +283,6 @@ object CardSpecialEffect {
             ))
         }
 
-        // "Древний сожитель" (id=2)
         val hasAncientCompanion = allCards.any { it.originalCard.id == 2 && it.isAlive }
         if (hasAncientCompanion) {
             icons.add(SpecialEffectInfo(
@@ -340,7 +292,6 @@ object CardSpecialEffect {
             ))
         }
 
-        // "Племя потерянных" (id=3)
         if (card.originalCard.id == 3) {
             icons.add(SpecialEffectInfo(
                 iconResId = R.drawable.ic_stun,
@@ -349,7 +300,6 @@ object CardSpecialEffect {
             ))
         }
 
-        // "Красный дьявол" (id=4)
         if (card.originalCard.id == 4) {
             icons.add(SpecialEffectInfo(
                 iconResId = R.drawable.ic_double_attack,
@@ -358,7 +308,6 @@ object CardSpecialEffect {
             ))
         }
 
-        // "Сын депутата" (id=5)
         if (card.originalCard.id == 5) {
             icons.add(SpecialEffectInfo(
                 iconResId = R.drawable.ic_shield,
@@ -367,7 +316,6 @@ object CardSpecialEffect {
             ))
         }
 
-        // "Мини Пекка" (id=6)
         if (card.originalCard.id == 6) {
             icons.add(SpecialEffectInfo(
                 iconResId = R.drawable.ic_double_attack,
@@ -376,7 +324,6 @@ object CardSpecialEffect {
             ))
         }
 
-        // "Мастер-класс" (id=7)
         if (card.originalCard.id == 7) {
             icons.add(SpecialEffectInfo(
                 iconResId = R.drawable.ic_heal,
@@ -385,7 +332,6 @@ object CardSpecialEffect {
             ))
         }
 
-        // "Единение с природой" (id=8)
         if (card.originalCard.id == 8) {
             icons.add(SpecialEffectInfo(
                 iconResId = R.drawable.ic_nature,
@@ -394,7 +340,6 @@ object CardSpecialEffect {
             ))
         }
 
-        // "Роланд Азер" (id=9)
         if (card.originalCard.id == 9) {
             icons.add(SpecialEffectInfo(
                 iconResId = R.drawable.ic_nature,
@@ -403,7 +348,6 @@ object CardSpecialEffect {
             ))
         }
 
-        // "Чай" (id=10)
         if (card.originalCard.id == 10) {
             icons.add(SpecialEffectInfo(
                 iconResId = R.drawable.ic_tea,
@@ -412,7 +356,6 @@ object CardSpecialEffect {
             ))
         }
 
-        // "Курсовая" (id=11)
         if (card.originalCard.id == 11) {
             icons.add(SpecialEffectInfo(
                 iconResId = R.drawable.ic_skull,
@@ -421,7 +364,6 @@ object CardSpecialEffect {
             ))
         }
 
-        // "Фантазер" (id=12)
         if (card.originalCard.id == 12) {
             icons.add(SpecialEffectInfo(
                 iconResId = R.drawable.ic_dream,
@@ -430,7 +372,6 @@ object CardSpecialEffect {
             ))
         }
 
-        // "Стример-неудачник" (id=13)
         if (card.originalCard.id == 13) {
             icons.add(SpecialEffectInfo(
                 iconResId = R.drawable.ic_illusion,
@@ -442,9 +383,6 @@ object CardSpecialEffect {
         return icons
     }
 
-    /**
-     * Отмечает, что повторная атака была использована
-     */
     fun markExtraAttackUsed(attacker: GameCard, allCards: List<GameCard>) {
         allCards.filter { it.originalCard.id == 2 && it.isAlive }
             .forEach { it.extraAttackUsed = true }
@@ -454,9 +392,6 @@ object CardSpecialEffect {
         }
     }
 
-    /**
-     * Сбрасывает флаги повторных атак и защиты для всех карт
-     */
     fun resetAllFlags(allCards: List<GameCard>) {
         allCards.forEach {
             it.resetExtraAttackFlag()
@@ -465,9 +400,6 @@ object CardSpecialEffect {
         }
     }
 
-    /**
-     * Получает описание особенности для карты
-     */
     fun getSpecialFeatureDescription(card: Card): String {
         return when (card.id) {
             1 -> "20% атакует повторно"

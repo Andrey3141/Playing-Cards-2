@@ -12,10 +12,16 @@ data class GitHubRelease(
     val tag_name: String,
     val name: String,
     val body: String,
-    val html_url: String
+    val html_url: String,
+    val assets: List<Asset>? = null
 )
 
-class UpdateChecker(private val context: Context, private val onResult: (Boolean, String?, String?) -> Unit) {
+data class Asset(
+    val browser_download_url: String,
+    val name: String
+)
+
+class UpdateChecker(private val context: Context, private val onResult: (Boolean, String?, String?, String?, String?) -> Unit) {
 
     companion object {
         private const val PREFS_NAME = "update_prefs"
@@ -24,18 +30,19 @@ class UpdateChecker(private val context: Context, private val onResult: (Boolean
     }
 
     fun checkForUpdates(forceCheck: Boolean = false) {
+        Log.d("UpdateChecker", "checkForUpdates() вызван, forceCheck=$forceCheck")
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val lastCheck = prefs.getLong(LAST_CHECK_TIME, 0)
+        val lastCheck = UpdateStateManager.getLastCheckTime()
         val now = System.currentTimeMillis()
 
-        // Если прошло меньше суток и не принудительная проверка — пропускаем
         if (!forceCheck && (now - lastCheck) < CHECK_INTERVAL_MS) {
             Log.d("UpdateChecker", "Последняя проверка была менее 24 часов назад, пропускаем")
-            onResult(false, null, null)
+            onResult(false, null, null, null, null)
             return
         }
 
-        // Сохраняем время проверки
+        UpdateStateManager.setLastCheckTime(now)
+
         prefs.edit().putLong(LAST_CHECK_TIME, now).apply()
 
         CheckUpdateTask().execute()
@@ -69,23 +76,25 @@ class UpdateChecker(private val context: Context, private val onResult: (Boolean
 
         override fun onPostExecute(release: GitHubRelease?) {
             if (release == null) {
-                onResult(false, null, null)
+                onResult(false, null, null, null, null)
                 return
             }
 
             val currentVersion = getCurrentVersion()
             val latestVersion = release.tag_name.replace("v", "")
-
             val isUpdateAvailable = compareVersions(currentVersion, latestVersion) < 0
-            onResult(isUpdateAvailable, latestVersion, release.html_url)
+
+            // Получаем прямую ссылку на APK (если есть в ассетах)
+            val apkUrl = release.assets?.find { it.name.endsWith(".apk") }?.browser_download_url
+
+            // Получаем changelog из body релиза
+            val changelog = release.body
+
+            onResult(isUpdateAvailable, latestVersion, release.html_url, apkUrl, changelog)
         }
 
         private fun getCurrentVersion(): String {
-            return try {
-                context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "1.2.0"
-            } catch (e: PackageManager.NameNotFoundException) {
-                "1.2.0"
-            }
+            return BuildConfig.VERSION_NAME
         }
 
         private fun compareVersions(v1: String, v2: String): Int {

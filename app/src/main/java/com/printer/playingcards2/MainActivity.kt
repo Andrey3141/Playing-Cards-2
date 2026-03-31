@@ -66,10 +66,25 @@ class MainActivity : AppCompatActivity() {
     private fun checkForUpdate() {
         if (!isNetworkAvailable()) return
 
-        val updateChecker = UpdateChecker(this) { isAvailable, latestVersion, downloadUrl ->
+        val updateChecker = UpdateChecker(this) { isAvailable, latestVersion, downloadUrl, apkUrl, changelog ->
             if (isAvailable && downloadUrl != null && !updateDialogShown) {
                 updateDialogShown = true
-                showUpdateDialog(latestVersion ?: "неизвестная", downloadUrl)
+                val currentVersion = BuildConfig.VERSION_NAME
+
+                val updateDialog = UpdateDialog(
+                    this,
+                    currentVersion,
+                    latestVersion ?: BuildConfig.VERSION_NAME
+                ) {
+                    val downloadUrlToUse = apkUrl ?: downloadUrl
+                    if (downloadUrlToUse != null) {
+                        val downloadDialog = DownloadDialog(this, downloadUrlToUse) {
+                            finishAffinity()
+                        }
+                        downloadDialog.show()
+                    }
+                }
+                updateDialog.show()
             }
         }
         updateChecker.checkForUpdates()

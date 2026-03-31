@@ -26,12 +26,10 @@ class GameCardAdapter(
         private val defenseText: TextView = itemView.findViewById(R.id.defenseText)
         private val healthBar: View = itemView.findViewById(R.id.healthBar)
 
-        // Иконки особенностей
         private val icon1: ImageView = itemView.findViewById(R.id.icon1)
         private val icon2: ImageView = itemView.findViewById(R.id.icon2)
         private val icon3: ImageView = itemView.findViewById(R.id.icon3)
 
-        // Эффект оглушения
         private val stunOverlay: View = itemView.findViewById(R.id.stunOverlay)
         private val stunIcon: ImageView = itemView.findViewById(R.id.stunIcon)
 
@@ -41,30 +39,26 @@ class GameCardAdapter(
             healthText.text = "${card.currentHealth}"
             attackText.text = "${card.currentAttack}"
 
-            // Полоска здоровья
             val healthPercent = card.currentHealth.toFloat() / card.originalCard.health.toFloat()
             val maxWidth = if (itemView.context.resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) 25 else 35
             healthBar.layoutParams.width = (healthPercent * maxWidth).toInt()
             healthBar.requestLayout()
 
-            // Защита
             defenseText.text = "${card.currentDefense}"
 
-            // ОТОБРАЖЕНИЕ ОГЛУШЕНИЯ
+            // Отображение оглушения
             if (card.isStunned) {
                 stunOverlay.visibility = View.VISIBLE
                 stunIcon.visibility = View.VISIBLE
-                cardView.alpha = 0.6f  // Затемняем карту
+                cardView.alpha = 0.6f
             } else {
                 stunOverlay.visibility = View.GONE
                 stunIcon.visibility = View.GONE
                 cardView.alpha = 1f
             }
 
-            // Получаем иконки особенностей
+            // Иконки особенностей
             val icons = CardSpecialEffect.getSpecialIcons(card, allSideCards)
-
-            // Скрываем все иконки
             icon1.visibility = View.GONE
             icon2.visibility = View.GONE
             icon3.visibility = View.GONE
@@ -73,7 +67,6 @@ class GameCardAdapter(
                 Toast.makeText(itemView.context, description, Toast.LENGTH_SHORT).show()
             }
 
-            // Отображаем иконки
             when (icons.size) {
                 1 -> {
                     icon1.visibility = View.VISIBLE
@@ -101,12 +94,16 @@ class GameCardAdapter(
                 }
             }
 
-            // Блокируем клик по оглушенной карте
+            // Логика клика:
+            // - Если карта принадлежит ИГРОКУ (isPlayer = true) и она оглушена → НЕЛЬЗЯ выбрать
+            // - Если карта принадлежит ВРАГУ (isPlayer = false) → МОЖНО атаковать, даже если оглушена
             itemView.setOnClickListener {
-                if (!card.isStunned) {
-                    onCardClick(card)
-                } else {
+                if (isPlayer && card.isStunned) {
+                    // Своя оглушенная карта — нельзя выбрать
                     Toast.makeText(itemView.context, "${card.originalCard.name} оглушен и не может атаковать!", Toast.LENGTH_SHORT).show()
+                } else {
+                    // Вражескую карту (даже оглушенную) или свою неоглушенную — можно кликнуть
+                    onCardClick(card)
                 }
             }
         }

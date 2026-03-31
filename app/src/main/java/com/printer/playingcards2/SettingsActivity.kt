@@ -91,7 +91,7 @@ class SettingsActivity : AppCompatActivity() {
         CreditItem("Тестировщик", "Сиваков Сергей Владимирович\nСкачков Андрей Юрьевич\nЧаюков Дмитрий Сергеевич", R.drawable.ic_test),
         CreditItem("Особая благодарность", "Хочу выразить благодарность самому себе, что вместо подготовки к гос экзамену делал эту игру, а также Чаюкову Дмитрию и Сивакову Сергею за активное участие в тестирование приложения", R.drawable.ic_thanks),
         CreditItem("Гитхаб", "Перейти на github разработчика", R.drawable.ic_github, "https://github.com/Andrey3141"),
-        CreditItem("Версия", "1.2.0", R.drawable.ic_version)
+        CreditItem("Версия", BuildConfig.VERSION_NAME, R.drawable.ic_version)
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -13,8 +13,6 @@ import android.os.Looper
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 
 class SplashActivity : AppCompatActivity() {
@@ -27,12 +25,13 @@ class SplashActivity : AppCompatActivity() {
     private var fadeOutRunnable: Runnable? = null
     private var isFinished = false
     private var isTransitioning = false
-    private var pendingUpdateDialog = false
+    private var isUpdateDialogShowing = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Полноэкранный режим
+        UpdateStateManager.init(this)
+
         window.decorView.systemUiVisibility = (
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -50,27 +49,84 @@ class SplashActivity : AppCompatActivity() {
         startDisclaimerAnimation()
         setupSkipClickListener()
 
-        // Проверяем обновления
-        checkForUpdate()
+        // Проверяем, нужно ли показать диалог
+        if (UpdateStateManager.shouldShowDialog()) {
+            // Диалог был активен при прошлом закрытии - показываем снова
+            val latestVersion = UpdateStateManager.getLatestVersion()
+            val downloadUrl = UpdateStateManager.getDownloadUrl()
+            val apkUrl = UpdateStateManager.getApkUrl()
+
+            if (latestVersion != null && downloadUrl != null) {
+                isUpdateDialogShowing = true
+                cancelFadeOutTimer()
+                showUpdateDialog(latestVersion, downloadUrl, apkUrl)
+            } else {
+                checkForUpdate()
+            }
+        } else {
+            // Проверяем, прошло ли 24 часа
+            if (UpdateStateManager.shouldCheckAgain()) {
+                checkForUpdate()
+            }
+        }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        // При повороте, если диалог показан, он пересоздастся сам
+        if (!isFinished && !isTransitioning && !isUpdateDialogShowing) {
+            cancelFadeOutTimer()
+            startFadeOutTimer()
+        }
     }
 
     private fun checkForUpdate() {
-        // Проверяем интернет
-        if (!isNetworkAvailable()) {
-            // Нет интернета — просто запускаем таймер
-            return
-        }
+        if (!isNetworkAvailable()) return
 
-        val updateChecker = UpdateChecker(this) { isAvailable, latestVersion, downloadUrl ->
-            if (isAvailable && downloadUrl != null && !pendingUpdateDialog && !isFinished && !isTransitioning) {
-                pendingUpdateDialog = true
-                // Отменяем таймер перехода
+        val updateChecker = UpdateChecker(this) { isAvailable, latestVersion, downloadUrl, apkUrl, changelog ->
+            if (isAvailable && downloadUrl != null && !isUpdateDialogShowing && !isFinished && !isTransitioning) {
+                isUpdateDialogShowing = true
+
+                // Сохраняем, что диалог активен
+                UpdateStateManager.setDialogActive(
+                    latestVersion ?: BuildConfig.VERSION_NAME,
+                    downloadUrl,
+                    apkUrl
+                )
+
                 cancelFadeOutTimer()
-
-                showUpdateDialog(latestVersion ?: "неизвестная", downloadUrl)
+                showUpdateDialog(latestVersion ?: BuildConfig.VERSION_NAME, downloadUrl, apkUrl)
             }
         }
         updateChecker.checkForUpdates()
+    }
+
+    private fun showUpdateDialog(latestVersion: String, downloadUrl: String, apkUrl: String?) {
+        val dialog = UpdateDialog(
+            this,
+            BuildConfig.VERSION_NAME,
+            latestVersion
+        ) {
+            // Нажали "Обновить"
+            UpdateStateManager.setDialogInactive()
+            isUpdateDialogShowing = false
+            val url = apkUrl ?: downloadUrl
+            if (url != null) {
+                val downloadDialog = DownloadDialog(this, url) {
+                    finishAffinity()
+                }
+                downloadDialog.show()
+            }
+        }
+
+        dialog.setOnDismissListener {
+            // Нажали "Позже" или закрыли диалог
+            UpdateStateManager.setDialogInactive()
+            isUpdateDialogShowing = false
+            startFadeOutTimer()
+        }
+
+        dialog.show()
     }
 
     private fun isNetworkAvailable(): Boolean {
@@ -90,35 +146,6 @@ class SplashActivity : AppCompatActivity() {
         }
     }
 
-    private fun showUpdateDialog(latestVersion: String, downloadUrl: String) {
-        AlertDialog.Builder(this)
-            .setTitle("🔄 Доступно обновление!")
-            .setMessage("Версия $latestVersion уже доступна.\n\nХотите перейти на GitHub и скачать новую версию?")
-            .setPositiveButton("Обновить") { _, _ ->
-                // Открываем браузер
-                val intent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse(downloadUrl))
-                startActivity(intent)
-                // После открытия браузера всё равно переходим в главное меню
-                finishAndGoToMain()
-            }
-            .setNegativeButton("Позже") { _, _ ->
-                pendingUpdateDialog = false
-                // Возвращаем таймер
-                startFadeOutTimer()
-            }
-            .setCancelable(false)
-            .show()
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        // При повороте отменяем старый таймер и запускаем новый
-        if (!isFinished && !isTransitioning && !pendingUpdateDialog) {
-            cancelFadeOutTimer()
-            startFadeOutTimer()
-        }
-    }
-
     private fun initViews() {
         disclaimerTitle = findViewById(R.id.disclaimerTitle)
         disclaimerLine = findViewById(R.id.disclaimerLine)
@@ -128,14 +155,13 @@ class SplashActivity : AppCompatActivity() {
     private fun setupSkipClickListener() {
         val rootView = findViewById<View>(android.R.id.content)
         rootView.setOnClickListener {
-            if (!isFinished && !isTransitioning && !pendingUpdateDialog) {
+            if (!isFinished && !isTransitioning && !isUpdateDialogShowing) {
                 skipDisclaimer()
             }
         }
     }
 
     private fun startDisclaimerAnimation() {
-        // Начальное состояние
         disclaimerTitle.alpha = 0f
         disclaimerTitle.scaleX = 0.8f
         disclaimerTitle.scaleY = 0.8f
@@ -147,7 +173,6 @@ class SplashActivity : AppCompatActivity() {
         disclaimerText.alpha = 0f
         disclaimerText.translationY = 50f
 
-        // Анимация появления
         disclaimerTitle.animate()
             .alpha(1f)
             .scaleX(1f)
@@ -173,14 +198,13 @@ class SplashActivity : AppCompatActivity() {
             .setInterpolator(AccelerateDecelerateInterpolator())
             .start()
 
-        // Запускаем таймер исчезновения
         startFadeOutTimer()
     }
 
     private fun startFadeOutTimer() {
         cancelFadeOutTimer()
         fadeOutRunnable = Runnable {
-            if (!isFinished && !isTransitioning && !pendingUpdateDialog) {
+            if (!isFinished && !isTransitioning && !isUpdateDialogShowing) {
                 startFadeOutAnimation()
             }
         }
@@ -196,12 +220,10 @@ class SplashActivity : AppCompatActivity() {
         if (isFinished || isTransitioning) return
         isTransitioning = true
 
-        // Отменяем таймер на всякий случай
         cancelFadeOutTimer()
 
         val fadeDuration = 1000L
 
-        // Все анимации запускаются одновременно
         disclaimerTitle.animate()
             .alpha(0f)
             .scaleX(0.6f)
@@ -231,9 +253,7 @@ class SplashActivity : AppCompatActivity() {
         if (isFinished || isTransitioning) return
         isFinished = true
         isTransitioning = true
-
         cancelFadeOutTimer()
-
         finishAndGoToMain()
     }
 
@@ -244,7 +264,5 @@ class SplashActivity : AppCompatActivity() {
         finish()
     }
 
-    override fun onBackPressed() {
-        // Кнопка назад не работает
-    }
+    override fun onBackPressed() {}
 }

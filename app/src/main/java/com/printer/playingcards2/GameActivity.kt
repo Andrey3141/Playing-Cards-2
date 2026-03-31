@@ -4,11 +4,13 @@ import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
+import android.animation.ValueAnimator
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AnticipateOvershootInterpolator
 import android.view.animation.BounceInterpolator
@@ -35,31 +37,29 @@ class GameActivity : AppCompatActivity() {
     private lateinit var decorSquare1: View
     private lateinit var decorSquare2: View
     private lateinit var whoStartsText: TextView
-    private lateinit var turnIndicator: ImageView
-    private lateinit var battleStatusText: TextView
+    lateinit var turnIndicator: ImageView
+    lateinit var battleStatusText: TextView
 
     private lateinit var enemyCardsRecyclerView: RecyclerView
     private lateinit var playerCardsRecyclerView: RecyclerView
 
-    private lateinit var playerCards: MutableList<GameCard>
-    private lateinit var enemyCards: MutableList<GameCard>
+    lateinit var playerCards: MutableList<GameCard>
+    lateinit var enemyCards: MutableList<GameCard>
     private lateinit var allCardsDatabase: List<Card>
 
-    private lateinit var playerAdapter: GameCardAdapter
-    private lateinit var enemyAdapter: GameCardAdapter
+    lateinit var playerAdapter: GameCardAdapter
+    lateinit var enemyAdapter: GameCardAdapter
 
-    private var isBattleActive = false
-    private var currentTurn = 0 // 0 - игрок, 1 - враг
-    private var selectedPlayerCard: GameCard? = null
-    private var isWaitingForTarget = false
+    var isBattleActive = false
+    var currentTurn = 0 // 0 - игрок, 1 - враг
+    var selectedPlayerCard: GameCard? = null
+    var isWaitingForTarget = false
 
     private var isProcessingExtraAttack = false
     private var isRematch = false
     private var isAnimating = false
 
-    // Оверлеи для иллюзии
-    private lateinit var darkOverlayTop: View
-    private lateinit var darkOverlayBottom: View
+    lateinit var damageCalculator: DamageCalculator
 
     private val STATE_PLAYER_CARDS = "player_cards"
     private val STATE_ENEMY_CARDS = "enemy_cards"
@@ -74,8 +74,9 @@ class GameActivity : AppCompatActivity() {
         setContentView(R.layout.activity_game)
         hideSystemUI()
         initViews()
-        initOverlays()
         loadAllCards()
+
+        damageCalculator = DamageCalculator(this)
 
         if (savedInstanceState != null) {
             isRematch = savedInstanceState.getBoolean(STATE_IS_REMATCH, false)
@@ -251,90 +252,6 @@ class GameActivity : AppCompatActivity() {
         battleStatusText = findViewById(R.id.battleStatusText)
     }
 
-    private fun initOverlays() {
-        darkOverlayTop = View(this).apply {
-            layoutParams = FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                0
-            )
-            setBackgroundColor(Color.BLACK)
-            visibility = View.GONE
-        }
-
-        darkOverlayBottom = View(this).apply {
-            layoutParams = FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                0
-            )
-            setBackgroundColor(Color.BLACK)
-            visibility = View.GONE
-        }
-
-        val rootLayout = findViewById<FrameLayout>(android.R.id.content)
-        rootLayout.addView(darkOverlayTop)
-        rootLayout.addView(darkOverlayBottom)
-    }
-
-    private fun animateIllusion(callback: () -> Unit) {
-        val screenHeight = resources.displayMetrics.heightPixels
-        val halfScreen = screenHeight / 2
-
-        // Анимация появления шторок
-        val animTop = ObjectAnimator.ofInt(darkOverlayTop.layoutParams.height, 0, halfScreen).apply {
-            addUpdateListener {
-                darkOverlayTop.layoutParams.height = it.animatedValue as Int
-                darkOverlayTop.requestLayout()
-            }
-            duration = 400
-        }
-
-        val animBottom = ObjectAnimator.ofInt(darkOverlayBottom.layoutParams.height, 0, halfScreen).apply {
-            addUpdateListener {
-                darkOverlayBottom.layoutParams.height = it.animatedValue as Int
-                darkOverlayBottom.requestLayout()
-            }
-            duration = 400
-        }
-
-        darkOverlayTop.visibility = View.VISIBLE
-        darkOverlayBottom.visibility = View.VISIBLE
-
-        AnimatorSet().apply {
-            playTogether(animTop, animBottom)
-            start()
-        }
-
-        // Задержка перед обратной анимацией
-        Handler(Looper.getMainLooper()).postDelayed({
-            // Анимация закрытия шторок
-            val closeAnimTop = ObjectAnimator.ofInt(darkOverlayTop.layoutParams.height, halfScreen, 0).apply {
-                addUpdateListener {
-                    darkOverlayTop.layoutParams.height = it.animatedValue as Int
-                    darkOverlayTop.requestLayout()
-                }
-                duration = 400
-            }
-
-            val closeAnimBottom = ObjectAnimator.ofInt(darkOverlayBottom.layoutParams.height, halfScreen, 0).apply {
-                addUpdateListener {
-                    darkOverlayBottom.layoutParams.height = it.animatedValue as Int
-                    darkOverlayBottom.requestLayout()
-                }
-                duration = 400
-            }
-
-            AnimatorSet().apply {
-                playTogether(closeAnimTop, closeAnimBottom)
-                start()
-                doOnEnd {
-                    darkOverlayTop.visibility = View.GONE
-                    darkOverlayBottom.visibility = View.GONE
-                    callback()
-                }
-            }
-        }, 800)
-    }
-
     private fun setupEnemyCards() {
         val availableCards = allCardsDatabase.toMutableList()
         enemyCards = mutableListOf()
@@ -460,7 +377,7 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
-    private fun performAttack(attacker: GameCard, target: GameCard, isEnemyAttack: Boolean = false) {
+    fun performAttack(attacker: GameCard, target: GameCard, isEnemyAttack: Boolean = false) {
         if (attacker.isStunned) {
             battleStatusText.text = "${attacker.originalCard.name} оглушен и пропускает ход!"
             attacker.isStunned = false
@@ -480,10 +397,20 @@ class GameActivity : AppCompatActivity() {
 
         if (attackerPos == -1 || targetPos == -1) return
 
-        val attackerView = if (isPlayerAttacking) playerCardsRecyclerView.findViewHolderForAdapterPosition(attackerPos)?.itemView
-        else enemyCardsRecyclerView.findViewHolderForAdapterPosition(attackerPos)?.itemView
-        val targetView = if (isPlayerAttacking) enemyCardsRecyclerView.findViewHolderForAdapterPosition(targetPos)?.itemView
-        else playerCardsRecyclerView.findViewHolderForAdapterPosition(targetPos)?.itemView
+        val attackerViewHolder = if (isPlayerAttacking) {
+            playerCardsRecyclerView.findViewHolderForAdapterPosition(attackerPos)
+        } else {
+            enemyCardsRecyclerView.findViewHolderForAdapterPosition(attackerPos)
+        }
+
+        val targetViewHolder = if (isPlayerAttacking) {
+            enemyCardsRecyclerView.findViewHolderForAdapterPosition(targetPos)
+        } else {
+            playerCardsRecyclerView.findViewHolderForAdapterPosition(targetPos)
+        }
+
+        val attackerView = attackerViewHolder?.itemView
+        val targetView = targetViewHolder?.itemView
 
         if (attackerView == null || targetView == null) {
             applyDamage(attacker, target, isPlayerAttacking, isEnemyAttack)
@@ -495,7 +422,6 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun applyDamage(attacker: GameCard, target: GameCard, isPlayerAttacking: Boolean, isEnemyAttack: Boolean) {
-        // Эффект "Чай" (id=10)
         val allAllies = if (isPlayerAttacking) playerCards else enemyCards
         val (teaAttackBonus, teaHitAlly, teaAllyTarget) = CardSpecialEffect.checkTeaTrigger(attacker, allAllies)
 
@@ -528,408 +454,15 @@ class GameActivity : AppCompatActivity() {
 
             if (attackerView != null && newTargetView != null) {
                 animateAttack(attackerView, newTargetView) {
-                    applyDamageToTarget(attacker, newTarget, isPlayerAttacking, isEnemyAttack, teaAttackBonus)
+                    damageCalculator.applyDamage(attacker, newTarget, isPlayerAttacking, isEnemyAttack, teaAttackBonus)
                 }
             } else {
-                applyDamageToTarget(attacker, newTarget, isPlayerAttacking, isEnemyAttack, teaAttackBonus)
+                damageCalculator.applyDamage(attacker, newTarget, isPlayerAttacking, isEnemyAttack, teaAttackBonus)
             }
             return
         }
 
-        applyDamageToTarget(attacker, target, isPlayerAttacking, isEnemyAttack, teaAttackBonus)
-    }
-
-    private fun applyDamageToTarget(attacker: GameCard, target: GameCard, isPlayerAttacking: Boolean, isEnemyAttack: Boolean, teaAttackBonus: Int) {
-        // Эффект "Стример-неудачник" (id=13) - иллюзия
-        val (illusionBonus, isIllusion, originalHealthBeforeBonus) = CardSpecialEffect.checkIllusionTrigger(attacker, target)
-        val originalIllusionAttack = attacker.currentAttack
-        if (illusionBonus > 0) {
-            attacker.currentAttack += illusionBonus
-            battleStatusText.text = "🎭 ${attacker.originalCard.name} чувствует прилив сил! Атака +12! 🎭"
-            Toast.makeText(this, "🎭 ${attacker.originalCard.name} верит в свою силу! +12! 🎭", Toast.LENGTH_SHORT).show()
-        }
-
-        // Лечение "Мастер-класс" (id=7)
-        val healAmount = CardSpecialEffect.checkHealTrigger(attacker)
-        if (healAmount > 0) {
-            val maxHealth = attacker.originalCard.health
-            val oldHealth = attacker.currentHealth
-            attacker.currentHealth = minOf(attacker.currentHealth + healAmount, maxHealth)
-            val actualHeal = attacker.currentHealth - oldHealth
-
-            battleStatusText.text = "💚 ${attacker.originalCard.name} восстановил $actualHeal здоровья! 💚"
-            Toast.makeText(this, "💚 ${attacker.originalCard.name} лечится на $actualHeal HP, но пропускает ход! 💚", Toast.LENGTH_LONG).show()
-
-            val attackerPos = if (isPlayerAttacking) playerCards.indexOf(attacker) else enemyCards.indexOf(attacker)
-            if (attackerPos != -1) {
-                if (isPlayerAttacking) playerAdapter.notifyItemChanged(attackerPos)
-                else enemyAdapter.notifyItemChanged(attackerPos)
-            }
-
-            if (teaAttackBonus > 0) attacker.currentAttack -= teaAttackBonus
-            if (illusionBonus > 0) attacker.currentAttack = originalIllusionAttack
-
-            clearSelection()
-            if (isPlayerAttacking) {
-                CardSpecialEffect.resetAllFlags(playerCards)
-                currentTurn = 1
-                turnIndicator.setImageResource(R.drawable.ic_enemy_turn)
-                battleStatusText.text = getString(R.string.enemy_turn)
-                Handler(Looper.getMainLooper()).postDelayed({ enemyTurn() }, 800)
-            } else {
-                CardSpecialEffect.resetAllFlags(enemyCards)
-                currentTurn = 0
-                startPlayerTurn()
-            }
-            isWaitingForTarget = false
-            selectedPlayerCard = null
-            return
-        }
-
-        // Удвоение атаки "Красный дьявол" (id=4)
-        val (attackMultiplier, defenseChanged) = CardSpecialEffect.checkDoubleAttackTrigger(attacker)
-        val originalAttack = attacker.currentAttack
-        if (attackMultiplier == 2) {
-            attacker.currentAttack *= 2
-            battleStatusText.text = "🔥 ${attacker.originalCard.name} активировал ярость! Атака x2! 🔥"
-            Toast.makeText(this, "🔥 ${attacker.originalCard.name} атакует с удвоенной силой! 🔥", Toast.LENGTH_SHORT).show()
-        }
-
-        // Бафф атаки "Мини Пекка" (id=6)
-        val (attackBonus, defenseReduced) = CardSpecialEffect.checkAttackBuffTrigger(attacker)
-        val originalAttackForBuff = attacker.currentAttack
-        if (attackBonus > 0) {
-            attacker.currentAttack += attackBonus
-            battleStatusText.text = "⚔️ ${attacker.originalCard.name} усилился! Атака +10! ⚔️"
-            Toast.makeText(this, "⚔️ ${attacker.originalCard.name} атакует с бонусом +10! ⚔️", Toast.LENGTH_SHORT).show()
-        }
-
-        // Снижение урона "Сын депутата" (id=5)
-        val damageMultiplier = CardSpecialEffect.checkDamageReduction(target)
-        var reducedDamageFlag = false
-        if (damageMultiplier < 1f) {
-            reducedDamageFlag = true
-            battleStatusText.text = "🛡️ ${target.originalCard.name} игнорирует 50% урона! 🛡️"
-            Toast.makeText(this, "🛡️ ${target.originalCard.name} игнорирует половину урона, но пропускает ход! 🛡️", Toast.LENGTH_LONG).show()
-        }
-
-        // Оглушение "Племя потерянных" (id=3)
-        val allEnemyCards = if (isPlayerAttacking) enemyCards else playerCards
-        val stunnedTarget = CardSpecialEffect.checkStunTrigger(attacker, allEnemyCards)
-        if (stunnedTarget != null) {
-            stunnedTarget.isStunned = true
-            battleStatusText.text = "🔥 ${attacker.originalCard.name} оглушил ${stunnedTarget.originalCard.name} палкой! 🔥"
-            Toast.makeText(this, "🔥 ${stunnedTarget.originalCard.name} пропустит следующий ход! 🔥", Toast.LENGTH_LONG).show()
-            val stunnedPos = allEnemyCards.indexOf(stunnedTarget)
-            if (stunnedPos != -1) {
-                if (isPlayerAttacking) enemyAdapter.notifyItemChanged(stunnedPos)
-                else playerAdapter.notifyItemChanged(stunnedPos)
-            }
-        }
-
-        // Расчет урона
-        var baseDamage = attacker.currentAttack
-        var finalDamage = (baseDamage * damageMultiplier).toInt()
-        finalDamage = maxOf(finalDamage, 1)
-
-        var remainingDamage = finalDamage
-        var damageToHealth = 0
-
-        if (target.currentDefense > 0) {
-            val shieldDamage = minOf(remainingDamage, target.currentDefense)
-            target.currentDefense -= shieldDamage
-            remainingDamage -= shieldDamage
-        }
-
-        if (remainingDamage > 0) {
-            damageToHealth = remainingDamage
-            target.currentHealth -= damageToHealth
-        }
-
-        val displayDamage = finalDamage
-
-        battleStatusText.text = when {
-            reducedDamageFlag -> "${attacker.originalCard.name} → $displayDamage урона (50% поглощено!)"
-            damageToHealth > 0 && target.currentDefense == 0 -> "${attacker.originalCard.name} → $displayDamage урона (щит сломан!)"
-            damageToHealth == 0 && target.currentDefense > 0 -> "${attacker.originalCard.name} → $displayDamage урона (щит поглотил урон)"
-            attackMultiplier == 2 -> "${attacker.originalCard.name} → $displayDamage урона (x2 урон!)"
-            attackBonus > 0 -> "${attacker.originalCard.name} → $displayDamage урона (+10 к атаке!)"
-            teaAttackBonus > 0 -> "${attacker.originalCard.name} → $displayDamage урона (+18 к атаке!)"
-            illusionBonus > 0 -> "${attacker.originalCard.name} → $displayDamage урона (+12 к атаке!)"
-            else -> "${attacker.originalCard.name} → $displayDamage урона"
-        }
-
-        // Восстанавливаем атаку
-        if (attackMultiplier == 2) attacker.currentAttack = originalAttack
-        if (attackBonus > 0) attacker.currentAttack = originalAttackForBuff
-        if (teaAttackBonus > 0) attacker.currentAttack -= teaAttackBonus
-
-        // ЭФФЕКТ ИЛЛЮЗИИ
-        if (illusionBonus > 0 && isIllusion) {
-            battleStatusText.text = "😵💫 ${attacker.originalCard.name} осознаёт, что это была иллюзия! 😵💫"
-            Toast.makeText(this, "😵💫 Это была иллюзия! Здоровье врага возвращается! 😵💫", Toast.LENGTH_LONG).show()
-
-            // Анимация затемнения
-            animateIllusion {
-                // Восстанавливаем здоровье цели к значению ДО атаки с бонусом
-                target.currentHealth = originalHealthBeforeBonus
-
-                // Обновляем UI
-                if (isPlayerAttacking) {
-                    val targetPos = enemyCards.indexOf(target)
-                    if (targetPos != -1) enemyAdapter.notifyItemChanged(targetPos)
-                } else {
-                    val targetPos = playerCards.indexOf(target)
-                    if (targetPos != -1) playerAdapter.notifyItemChanged(targetPos)
-                }
-
-                battleStatusText.text = "✨ Иллюзия рассеялась! Урон был только в воображении... ✨"
-
-                // Восстанавливаем атаку после эффекта
-                if (illusionBonus > 0) {
-                    attacker.currentAttack = originalIllusionAttack
-                }
-
-                // Продолжаем ход
-                if (isPlayerAttacking) {
-                    CardSpecialEffect.resetAllFlags(playerCards)
-                    currentTurn = 1
-                    isWaitingForTarget = false
-                    selectedPlayerCard = null
-                    turnIndicator.setImageResource(R.drawable.ic_enemy_turn)
-                    battleStatusText.text = getString(R.string.enemy_turn)
-                    Handler(Looper.getMainLooper()).postDelayed({ enemyTurn() }, 800)
-                } else {
-                    CardSpecialEffect.resetAllFlags(enemyCards)
-                    currentTurn = 0
-                    startPlayerTurn()
-                }
-            }
-            return
-        }
-
-        // Восстанавливаем атаку после эффекта
-        if (illusionBonus > 0) {
-            attacker.currentAttack = originalIllusionAttack
-        }
-
-        // Смерть цели
-        if (target.currentHealth <= 0) {
-            target.isAlive = false
-            val index = if (isPlayerAttacking) enemyCards.indexOf(target) else playerCards.indexOf(target)
-            if (index != -1) {
-                if (isPlayerAttacking) {
-                    enemyCards.removeAt(index)
-                    enemyAdapter.notifyItemRemoved(index)
-                } else {
-                    playerCards.removeAt(index)
-                    playerAdapter.notifyItemRemoved(index)
-                }
-                battleStatusText.text = "${target.originalCard.name} повержен!"
-                if (if (isPlayerAttacking) enemyCards.isEmpty() else playerCards.isEmpty()) {
-                    endBattle(isPlayerAttacking)
-                    return
-                }
-            }
-            clearSelection()
-            if (isPlayerAttacking) {
-                CardSpecialEffect.resetAllFlags(playerCards)
-                currentTurn = 1
-                turnIndicator.setImageResource(R.drawable.ic_enemy_turn)
-                battleStatusText.text = getString(R.string.enemy_turn)
-                Handler(Looper.getMainLooper()).postDelayed({ enemyTurn() }, 800)
-            } else {
-                CardSpecialEffect.resetAllFlags(enemyCards)
-                currentTurn = 0
-                startPlayerTurn()
-            }
-            isWaitingForTarget = false
-            selectedPlayerCard = null
-            return
-        }
-
-        // Обновляем UI цели
-        if (isPlayerAttacking) {
-            val targetPos = enemyCards.indexOf(target)
-            if (targetPos != -1) enemyAdapter.notifyItemChanged(targetPos)
-        } else {
-            val targetPos = playerCards.indexOf(target)
-            if (targetPos != -1) playerAdapter.notifyItemChanged(targetPos)
-        }
-
-        clearSelection()
-
-        // Проверяем повторную атаку
-        val allSideCards = if (isPlayerAttacking) playerCards else enemyCards
-        val triggeredEffects = CardSpecialEffect.checkExtraAttackTriggers(attacker, allSideCards)
-
-        if (triggeredEffects.isNotEmpty()) {
-            val effectMessages = triggeredEffects.map { effect ->
-                when (effect.cardId) {
-                    1 -> "Горохострел"
-                    2 -> "Древний сожитель"
-                    else -> "Особенность"
-                }
-            }
-            val sideName = if (isPlayerAttacking) "Ваша" else "Вражеская"
-            val effectText = effectMessages.joinToString(" и ")
-            val toastMessage = if (triggeredEffects.size == 1) {
-                "🔥 $sideName карта \"$effectText\" дает повторную атаку! 🔥"
-            } else {
-                "🔥 $sideName карты \"$effectText\" дают повторную атаку! 🔥"
-            }
-
-            battleStatusText.text = "🔥 Сработал эффект: $effectText! Повторная атака! 🔥"
-            Toast.makeText(this, toastMessage, Toast.LENGTH_LONG).show()
-
-            Handler(Looper.getMainLooper()).postDelayed({
-                val aliveTargets = if (isPlayerAttacking) enemyCards.filter { it.isAlive } else playerCards.filter { it.isAlive }
-                if (aliveTargets.isNotEmpty()) {
-                    performAttack(attacker, aliveTargets.random(), !isPlayerAttacking)
-                } else {
-                    endBattle(isPlayerAttacking)
-                }
-            }, 800)
-            return
-        }
-
-        // Эффект "Единение с природой" (id=8)
-        val (natureAttackBonus, natureDefenseReduced, natureHealthReduced) = CardSpecialEffect.checkNatureBuffTrigger(attacker)
-        if (natureAttackBonus > 0) {
-            battleStatusText.text = "🌿 ${attacker.originalCard.name} сливается с природой! Атака +10 навсегда! 🌿"
-            Toast.makeText(this, "🌿 ${attacker.originalCard.name} получил +10 к атаке! 🌿", Toast.LENGTH_SHORT).show()
-            if (natureDefenseReduced || natureHealthReduced) {
-                val debuffMsg = mutableListOf<String>()
-                if (natureDefenseReduced) debuffMsg.add("защита -5")
-                if (natureHealthReduced) debuffMsg.add("здоровье -5")
-                battleStatusText.text = "${battleStatusText.text} Но природа забирает: ${debuffMsg.joinToString(", ")}!"
-                Toast.makeText(this, "⚠️ ${attacker.originalCard.name} теряет ${debuffMsg.joinToString(", ")}! ⚠️", Toast.LENGTH_SHORT).show()
-            }
-            val attackerPos = if (isPlayerAttacking) playerCards.indexOf(attacker) else enemyCards.indexOf(attacker)
-            if (attackerPos != -1) {
-                if (isPlayerAttacking) playerAdapter.notifyItemChanged(attackerPos)
-                else enemyAdapter.notifyItemChanged(attackerPos)
-            }
-        }
-
-        // Эффект "Роланд Азер" (id=9) - глобальный бафф
-        val globalBuffTriggered = CardSpecialEffect.checkGlobalAttackBuffTrigger(attacker, allSideCards)
-        if (globalBuffTriggered) {
-            val sideName = if (isPlayerAttacking) "Ваши" else "Вражеские"
-            battleStatusText.text = "👑 ${attacker.originalCard.name} вдохновляет армию! $sideName карты получают +39% к атаке! 👑"
-            Toast.makeText(this, "👑 $sideName карты усилены на 39%! 👑", Toast.LENGTH_LONG).show()
-            if (isPlayerAttacking) playerAdapter.notifyDataSetChanged()
-            else enemyAdapter.notifyDataSetChanged()
-        }
-
-        // Эффект "Курсовая" (id=11)
-        val allEnemyCardsForKill = if (isPlayerAttacking) enemyCards else playerCards
-        val (strongestCard, shouldKillSelf) = CardSpecialEffect.checkKillStrongestTrigger(attacker, allEnemyCardsForKill)
-
-        if (strongestCard != null && shouldKillSelf) {
-            battleStatusText.text = "💀 ${attacker.originalCard.name} жертвует собой, чтобы убить ${strongestCard.originalCard.name}! 💀"
-            Toast.makeText(this, "💀 ${attacker.originalCard.name} уничтожает сильнейшего врага ценой своей жизни! 💀", Toast.LENGTH_LONG).show()
-
-            strongestCard.currentHealth = 0
-            strongestCard.isAlive = false
-
-            val strongestIndex = if (isPlayerAttacking) enemyCards.indexOf(strongestCard) else playerCards.indexOf(strongestCard)
-            if (strongestIndex != -1) {
-                if (isPlayerAttacking) {
-                    enemyCards.removeAt(strongestIndex)
-                    enemyAdapter.notifyItemRemoved(strongestIndex)
-                } else {
-                    playerCards.removeAt(strongestIndex)
-                    playerAdapter.notifyItemRemoved(strongestIndex)
-                }
-            }
-
-            attacker.currentHealth = 0
-            attacker.isAlive = false
-
-            val attackerIndex = if (isPlayerAttacking) playerCards.indexOf(attacker) else enemyCards.indexOf(attacker)
-            if (attackerIndex != -1) {
-                if (isPlayerAttacking) {
-                    playerCards.removeAt(attackerIndex)
-                    playerAdapter.notifyItemRemoved(attackerIndex)
-                } else {
-                    enemyCards.removeAt(attackerIndex)
-                    enemyAdapter.notifyItemRemoved(attackerIndex)
-                }
-            }
-
-            if (if (isPlayerAttacking) enemyCards.isEmpty() else playerCards.isEmpty()) {
-                endBattle(isPlayerAttacking)
-                return
-            }
-            if (if (isPlayerAttacking) playerCards.isEmpty() else enemyCards.isEmpty()) {
-                endBattle(!isPlayerAttacking)
-                return
-            }
-
-            clearSelection()
-
-            if (isPlayerAttacking) {
-                CardSpecialEffect.resetAllFlags(playerCards)
-                currentTurn = 1
-                turnIndicator.setImageResource(R.drawable.ic_enemy_turn)
-                battleStatusText.text = getString(R.string.enemy_turn)
-                Handler(Looper.getMainLooper()).postDelayed({ enemyTurn() }, 800)
-            } else {
-                CardSpecialEffect.resetAllFlags(enemyCards)
-                currentTurn = 0
-                startPlayerTurn()
-            }
-            return
-        }
-
-        // Эффект "Фантазер" (id=12)
-        val (dreamerAttackBonus, dreamerSkipTurn, dreamerShouldStun) = CardSpecialEffect.checkDreamerTrigger(attacker)
-        val originalDreamerAttack = attacker.currentAttack
-        if (dreamerAttackBonus > 0) {
-            attacker.currentAttack += dreamerAttackBonus
-            battleStatusText.text = "💭 ${attacker.originalCard.name} фантазирует! Атака +20! 💭"
-            Toast.makeText(this, "💭 ${attacker.originalCard.name} мечтает о большой атаке! +20! 💭", Toast.LENGTH_SHORT).show()
-        }
-
-        if (dreamerAttackBonus > 0 && dreamerShouldStun) {
-            battleStatusText.text = "😵 ${attacker.originalCard.name} замечтался и пропускает ход! 😵"
-            Toast.makeText(this, "😵 ${attacker.originalCard.name} ушёл в мечты и пропускает ход! 😵", Toast.LENGTH_SHORT).show()
-
-            if (isPlayerAttacking) {
-                CardSpecialEffect.resetAllFlags(playerCards)
-                currentTurn = 1
-                turnIndicator.setImageResource(R.drawable.ic_enemy_turn)
-                battleStatusText.text = getString(R.string.enemy_turn)
-                Handler(Looper.getMainLooper()).postDelayed({ enemyTurn() }, 800)
-            } else {
-                CardSpecialEffect.resetAllFlags(enemyCards)
-                currentTurn = 0
-                startPlayerTurn()
-            }
-            isWaitingForTarget = false
-            selectedPlayerCard = null
-            return
-        }
-
-        if (dreamerAttackBonus > 0) {
-            attacker.currentAttack = originalDreamerAttack
-        }
-
-        // Завершение хода
-        if (isPlayerAttacking) {
-            CardSpecialEffect.resetAllFlags(playerCards)
-            currentTurn = 1
-            isWaitingForTarget = false
-            selectedPlayerCard = null
-            turnIndicator.setImageResource(R.drawable.ic_enemy_turn)
-            battleStatusText.text = getString(R.string.enemy_turn)
-            Handler(Looper.getMainLooper()).postDelayed({ enemyTurn() }, 800)
-        } else {
-            CardSpecialEffect.resetAllFlags(enemyCards)
-            currentTurn = 0
-            startPlayerTurn()
-        }
+        damageCalculator.applyDamage(attacker, target, isPlayerAttacking, isEnemyAttack, teaAttackBonus)
     }
 
     private fun endTurnAfterStun(isPlayerTurn: Boolean) {
@@ -948,7 +481,7 @@ class GameActivity : AppCompatActivity() {
         selectedPlayerCard = null
     }
 
-    private fun clearSelection() {
+    fun clearSelection() {
         selectedPlayerCard = null
         isWaitingForTarget = false
         playerCards.forEachIndexed { index, _ ->
@@ -960,8 +493,7 @@ class GameActivity : AppCompatActivity() {
         battleStatusText.text = getString(R.string.your_turn)
     }
 
-    private fun enemyTurn() {
-        enemyCards.forEach { it.resetStun() }
+    fun enemyTurn() {
         enemyAdapter.notifyDataSetChanged()
 
         val aliveEnemy = enemyCards.filter { it.isAlive }
@@ -984,11 +516,13 @@ class GameActivity : AppCompatActivity() {
 
         val attacker = playableEnemy.random()
         val target = alivePlayer.random()
-        performAttack(attacker, target, true)
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            performAttack(attacker, target, true)
+        }, 100)
     }
 
-    private fun startPlayerTurn() {
-        playerCards.forEach { it.resetStun() }
+    fun startPlayerTurn() {
         playerAdapter.notifyDataSetChanged()
 
         val alivePlayer = playerCards.filter { it.isAlive }
@@ -1014,7 +548,7 @@ class GameActivity : AppCompatActivity() {
         battleStatusText.text = getString(R.string.your_turn)
     }
 
-    private fun endBattle(playerWon: Boolean) {
+    fun endBattle(playerWon: Boolean) {
         isBattleActive = false
         isAnimating = false
         isProcessingExtraAttack = false
